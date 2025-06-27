@@ -10,7 +10,7 @@ export default function Navigator() {
 
       <div>
         <Link
-          href="/login"
+          href="/auth/login"
           className="px-4 py-2 border border-gray-300 rounded text-sm"
         >
           Login
