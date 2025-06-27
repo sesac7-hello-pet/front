@@ -2,21 +2,50 @@
 "use client";
 
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
+
+// ▼ UI 에 보이는 라벨
+const ROLE_LABELS = ["유저", "보호소", "관리자"] as const;
+type RoleLabel = (typeof ROLE_LABELS)[number];
+
+// ▼ API 로 보낼 코드
+const roleLabelToCode: Record<RoleLabel, "USER" | "SHELTER" | "ADMIN"> = {
+  유저: "USER",
+  보호소: "SHELTER",
+  관리자: "ADMIN",
+};
 
 export default function SignupPage() {
+  const [role, setRole] = useState<Role>("유저"); // 기본 선택값
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-white">
-      {/* 카드 */}
       <div className="w-full max-w-md rounded-2xl shadow-[0_0_0_4px_rgba(253,224,71,0.25)] p-10">
-        {/* 제목 */}
-        <h1 className="mb-2 text-center text-3xl font-bold tracking-widest text-amber-400">
-          보호소
-        </h1>
-        <h2 className="mb-10 text-center text-3xl font-bold tracking-widest text-amber-400">
-          회원가입
-        </h2>
+        {/* ───────────────── 선택 영역 ───────────────── */}
+        <div className="mb-8 flex justify-center gap-4">
+          {ROLE_LABELS.map((r) => (
+            <button
+              key={r}
+              type="button"
+              onClick={() => setRole(r)}
+              className={`rounded-full border px-4 py-1 text-sm transition 
+                ${
+                  role === r
+                    ? "border-amber-400 bg-amber-400 text-white"
+                    : "border-gray-300 text-gray-600 hover:border-amber-400"
+                }`}
+            >
+              {r}
+            </button>
+          ))}
+        </div>
 
+        {/* ───────────────── 제목 ───────────────── */}
+        <h1 className="mb-10 text-center text-3xl font-bold tracking-widest text-amber-400">
+          {role} 회원가입
+        </h1>
+
+        {/* ───────────────── 폼 ───────────────── */}
         <form className="space-y-5">
           {/* 이메일 + 중복확인 */}
           <div className="flex gap-3">
@@ -33,14 +62,13 @@ export default function SignupPage() {
             </button>
           </div>
 
-          {/* 비밀번호 */}
+          {/* 비밀번호 ························································· */}
           <input
             type="password"
             placeholder="비밀번호를 입력하세요."
             className="w-full rounded-lg px-4 py-3 shadow placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-400"
           />
 
-          {/* 비밀번호 확인 */}
           <input
             type="password"
             placeholder="비밀번호 확인"
@@ -76,7 +104,7 @@ export default function SignupPage() {
             className="w-full rounded-lg px-4 py-3 shadow placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-400"
           />
 
-          {/* 휴대폰 번호 3-분할 + 중복확인 */}
+          {/* 휴대폰 번호 3분할 + 중복확인 */}
           <div className="flex items-center gap-3">
             <input
               type="tel"
@@ -99,7 +127,7 @@ export default function SignupPage() {
             </button>
           </div>
 
-          {/* 최종 제출 */}
+          {/* 제출 */}
           <button
             type="submit"
             className="mt-4 w-full rounded-lg bg-amber-400 py-3 font-semibold text-white shadow-md transition hover:bg-amber-500"
@@ -108,7 +136,7 @@ export default function SignupPage() {
           </button>
         </form>
 
-        {/* 로그인 링크 (선택) */}
+        {/* 로그인 링크 */}
         <div className="mt-6 text-center">
           <Link
             href="/auth/login"
