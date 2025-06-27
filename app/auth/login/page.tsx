@@ -1,6 +1,7 @@
 "use client";
 
 import api from "@/app/lib/api";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
@@ -62,7 +63,12 @@ export default function LoginPage() {
 
         {/* 하단 링크 */}
         <div className="mt-6 text-center">
-          <p className="text-sm text-amber-400 hover:underline">회원가입</p>
+          <Link
+            href="/auth/signup"
+            className="text-sm text-amber-400 hover:underline"
+          >
+            회원가입
+          </Link>
         </div>
       </div>
     </div>
