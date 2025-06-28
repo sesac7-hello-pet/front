@@ -1,6 +1,7 @@
 "use client";
 
 import api from "@/app/lib/api";
+import { useUserStore } from "@/app/store/UserStore";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -11,12 +12,17 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  const setUser = useUserStore((s) => s.setUser);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (loading) return;
     try {
       setLoading(true);
-      await api.post("/auth/login", { email, password });
+      await api.post("/auth/login", { email, password }).then((res) => {
+        setUser(res.data);
+      });
+      alert("로그인 되었습니다!");
       router.push("/");
     } catch (err) {
       alert("로그인 실패: " + (err as Error).message);
