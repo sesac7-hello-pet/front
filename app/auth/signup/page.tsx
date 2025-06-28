@@ -1,7 +1,9 @@
 // app/(auth)/signup/page.tsx
 "use client";
 
+import api from "@/app/lib/api";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 
 /* ── 역할 매핑 ─────────────────────────────────────────────── */
@@ -31,6 +33,8 @@ export default function SignupPage() {
   const [phone1, setPhone1] = useState("010");
   const [phone2, setPhone2] = useState("");
   const [phone3, setPhone3] = useState("");
+
+  const router = useRouter();
 
   /* ✅ “건드렸는지” 상태 */
   const [touched, setTouched] = useState<Record<string, boolean>>({});
@@ -96,7 +100,30 @@ export default function SignupPage() {
   /* ── 제출 ────────────────────────────────────────────── */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert("(API 연결) 가입 시도!");
+    // 1) 마지막 유효성 검사
+    if (!validate()) return;
+
+    // 2) 백엔드 DTO(UserRegisterRequest)에 맞춰 페이로드 구성
+    const payload = {
+      email,
+      password,
+      role: roleLabelToCode[role], // "USER" | "SHELTER" | "ADMIN"
+      nickname,
+      username,
+      address,
+      phoneNumber: `${phone1}${phone2}${phone3}`, // 11자리 숫자
+      userProfileUrl: profileUrl || null,
+    };
+    try {
+      const res = await api.post("/users/signup", payload);
+      console.log(res);
+      alert("회원가입이 완료되었습니다!");
+      router.push("/auth/login");
+    } catch (error: any) {
+      const msg =
+        error.response?.data?.message || "알 수 없는 오류가 발생했습니다.";
+      alert(`회원가입 실패: ${msg}`);
+    }
   };
 
   /* ── UI ──────────────────────────────────────────────── */
