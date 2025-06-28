@@ -1,7 +1,9 @@
+import BoardBanner from "../components/BoardBanner";
+
 export default function Home() {
   return (
     <div>
-      <h1>hello pet</h1>
+      <BoardBanner />
     </div>
   );
 }
