@@ -36,6 +36,10 @@ export default function SignupPage() {
   const [phone2, setPhone2] = useState("");
   const [phone3, setPhone3] = useState("");
 
+  const [emailChecked, setEmailChecked] = useState(false);
+  const [nicknameChecked, setNicknameChecked] = useState(false);
+  const [phoneChecked, setPhoneChecked] = useState(false);
+
   const router = useRouter();
 
   /* ✅ “건드렸는지” 상태 */
@@ -144,7 +148,8 @@ export default function SignupPage() {
         },
       });
       if (!res.data.result) {
-        console.log(res.data);
+        setEmailChecked(true);
+        alert(res.data.message);
       }
     } catch (error: any) {
       const msg =
@@ -162,7 +167,8 @@ export default function SignupPage() {
         },
       });
       if (!res.data.result) {
-        console.log(res.data);
+        setNicknameChecked(true);
+        alert(res.data.message);
       }
     } catch (error: any) {
       const msg =
@@ -180,7 +186,8 @@ export default function SignupPage() {
         },
       });
       if (!res.data.result) {
-        console.log(res.data);
+        setPhoneChecked(true);
+        alert(res.data.message);
       }
     } catch (error: any) {
       const msg =
@@ -249,7 +256,10 @@ export default function SignupPage() {
           <div className="flex items-center">
             <input
               value={email}
-              onChange={markTouched("email", setEmail)}
+              onChange={(e) => {
+                markTouched("email", setEmail)(e);
+                setEmailChecked(false);
+              }}
               type="email"
               placeholder="이메일"
               className="flex-grow rounded-lg px-4 py-3 shadow placeholder-gray-400 focus:ring-2 focus:ring-amber-400"
@@ -304,7 +314,10 @@ export default function SignupPage() {
           <div className="flex items-center">
             <input
               value={nickname}
-              onChange={markTouched("nickname", setNickname)}
+              onChange={(e) => {
+                markTouched("nickname", setNickname)(e);
+                setNicknameChecked(false);
+              }}
               type="text"
               placeholder="닉네임"
               className="flex-grow rounded-lg px-4 py-3 shadow placeholder-gray-400 focus:ring-2 focus:ring-amber-400"
@@ -346,19 +359,28 @@ export default function SignupPage() {
           <div className="flex items-center gap-3">
             <input
               value={phone1}
-              onChange={markTouched("phone1", setPhone1, true)}
+              onChange={(e) => {
+                markTouched("phone1", setPhone1, true)(e);
+                setPhoneChecked(false);
+              }}
               maxLength={3}
               className="w-1/4 rounded-lg px-2 py-3 text-center shadow focus:ring-2 focus:ring-amber-400"
             />
             <input
               value={phone2}
-              onChange={markTouched("phone2", setPhone2, true)}
+              onChange={(e) => {
+                markTouched("phone2", setPhone2, true)(e);
+                setPhoneChecked(false);
+              }}
               maxLength={4}
               className="w-1/4 rounded-lg px-2 py-3 text-center shadow focus:ring-2 focus:ring-amber-400"
             />
             <input
               value={phone3}
-              onChange={markTouched("phone3", setPhone3, true)}
+              onChange={(e) => {
+                markTouched("phone3", setPhone3, true)(e);
+                setPhoneChecked(false);
+              }}
               maxLength={4}
               className="w-1/4 rounded-lg px-2 py-3 text-center shadow focus:ring-2 focus:ring-amber-400"
             />
