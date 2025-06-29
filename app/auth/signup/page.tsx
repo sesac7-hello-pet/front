@@ -18,6 +18,8 @@ const roleLabelToCode: Record<RoleLabel, "USER" | "SHELTER" | "ADMIN"> = {
 /* ── 정규식 상수 ───────────────────────────────────────────── */
 const PASSWORD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{6,}$/; // 영문·숫자·특수문자 포함 6자+
 const PHONE_REGEX = /^\d{3}-\d{4}-\d{4}$/; // 010-0000-0000
+const KOREAN_REGEX = /^[가-힣]+$/;
+const ENGLISH_REGEX = /^[A-Za-z]+$/;
 
 export default function SignupPage() {
   /* ── 상태 ──────────────────────────────────────────────── */
@@ -34,6 +36,10 @@ export default function SignupPage() {
   const [phone2, setPhone2] = useState("");
   const [phone3, setPhone3] = useState("");
 
+  const [emailChecked, setEmailChecked] = useState(false);
+  const [nicknameChecked, setNicknameChecked] = useState(false);
+  const [phoneChecked, setPhoneChecked] = useState(false);
+
   const router = useRouter();
 
   /* ✅ “건드렸는지” 상태 */
@@ -45,6 +51,23 @@ export default function SignupPage() {
   /* 에러 메시지 */
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  const isFormValid =
+    email &&
+    !errors.email &&
+    PASSWORD_REGEX.test(password) &&
+    !errors.password &&
+    !errors.passwordCheck &&
+    username &&
+    !errors.username &&
+    nickname &&
+    !errors.nickname &&
+    address &&
+    !errors.address &&
+    phone1 &&
+    phone2 &&
+    phone3 &&
+    !errors.phone;
+
   /* ── 실시간 유효성 검사 ──────────────────────────────── */
   useEffect(() => {
     validate(); // 한 글자만 바뀌어도 즉시 재검사
@@ -55,6 +78,7 @@ export default function SignupPage() {
     passwordCheck,
     username,
     address,
+    nickname,
     phone1,
     phone2,
     phone3,
@@ -81,21 +105,96 @@ export default function SignupPage() {
     // 주소
     if (!address) errs.address = "주소는 필수입니다.";
 
-    // 휴대폰
+    if (!nickname) {
+      errs.nickname = "닉네임은 필수입니다.";
+    } else if (KOREAN_REGEX.test(nickname) && nickname.length < 2) {
+      errs.nickname = "한글 닉네임은 최소 2자 이상이어야 합니다.";
+    } else if (ENGLISH_REGEX.test(nickname) && nickname.length < 5) {
+      errs.nickname = "영문 닉네임은 최소 5자 이상이어야 합니다.";
+    } else if (!KOREAN_REGEX.test(nickname) && !ENGLISH_REGEX.test(nickname)) {
+      errs.nickname = "닉네임은 한글 또는 영문자만 사용할 수 있습니다.";
+    }
+
+    // 휴대폰 검사
     const phone = `${phone1}-${phone2}-${phone3}`;
-    if (!PHONE_REGEX.test(phone))
+    if (!PHONE_REGEX.test(phone)) {
       errs.phone = "휴대폰 번호는 010-0000-0000 형식이어야 합니다.";
+    }
 
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
 
+  /* ── 한번이라도 텍스트 입력 했는지 체크 ─────────────────── */
+
   const markTouched =
-    (field: string, setter: (v: string) => void) =>
+    (field: string, setter: (v: string) => void, markPhone = false) =>
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setter(e.target.value);
-      setTouched((t) => ({ ...t, [field]: true }));
+      setTouched((t) => ({
+        ...t,
+        [field]: true,
+        ...(markPhone ? { phone: true } : {}),
+      }));
     };
+
+  /* ── 중복 체크 부분 ───────────────────────────────────── */
+  const checkEmail = async () => {
+    try {
+      const res = await api.get("/users/exist", {
+        params: {
+          field: "EMAIL",
+          value: email,
+        },
+      });
+      if (!res.data.result) {
+        setEmailChecked(true);
+        alert(res.data.message);
+      }
+    } catch (error: any) {
+      const msg =
+        error.response?.data?.message || "알 수 없는 오류가 발생했습니다.";
+      alert(`중복확인 실패: ${msg}`);
+    }
+  };
+
+  const checkNicname = async () => {
+    try {
+      const res = await api.get("/users/exist", {
+        params: {
+          field: "NICKNAME",
+          value: nickname,
+        },
+      });
+      if (!res.data.result) {
+        setNicknameChecked(true);
+        alert(res.data.message);
+      }
+    } catch (error: any) {
+      const msg =
+        error.response?.data?.message || "알 수 없는 오류가 발생했습니다.";
+      alert(`중복확인 실패: ${msg}`);
+    }
+  };
+
+  const checkPhone = async () => {
+    try {
+      const res = await api.get("/users/exist", {
+        params: {
+          field: "PHONE",
+          value: phone1 + phone2 + phone3,
+        },
+      });
+      if (!res.data.result) {
+        setPhoneChecked(true);
+        alert(res.data.message);
+      }
+    } catch (error: any) {
+      const msg =
+        error.response?.data?.message || "알 수 없는 오류가 발생했습니다.";
+      alert(`중복확인 실패: ${msg}`);
+    }
+  };
 
   /* ── 제출 ────────────────────────────────────────────── */
   const handleSubmit = async (e: React.FormEvent) => {
@@ -154,13 +253,26 @@ export default function SignupPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* 이메일 */}
-          <input
-            value={email}
-            onChange={markTouched("email", setEmail)}
-            type="email"
-            placeholder="이메일"
-            className="w-full rounded-lg px-4 py-3 shadow placeholder-gray-400 focus:ring-2 focus:ring-amber-400"
-          />
+          <div className="flex items-center">
+            <input
+              value={email}
+              onChange={(e) => {
+                markTouched("email", setEmail)(e);
+                setEmailChecked(false);
+              }}
+              type="email"
+              placeholder="이메일"
+              className="flex-grow rounded-lg px-4 py-3 shadow placeholder-gray-400 focus:ring-2 focus:ring-amber-400"
+            />
+            <button
+              onClick={checkEmail}
+              disabled={!email || Boolean(errors.email)}
+              type="button"
+              className="ml-3 flex-none whitespace-nowrap rounded-lg bg-amber-400 px-4 py-2 text-sm font-medium text-white shadow transition hover:bg-amber-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              중복확인
+            </button>
+          </div>
           {errors.email && (touched.email || submitted) && (
             <p className="text-xs text-red-500">{errors.email}</p>
           )}
@@ -199,14 +311,29 @@ export default function SignupPage() {
             <p className="text-xs text-red-500">{errors.username}</p>
           )}
 
-          <input
-            value={nickname}
-            onChange={markTouched("nickname", setNickname)}
-            type="text"
-            placeholder="닉네임"
-            className="w-full rounded-lg px-4 py-3 shadow placeholder-gray-400 focus:ring-2 focus:ring-amber-400"
-          />
-
+          <div className="flex items-center">
+            <input
+              value={nickname}
+              onChange={(e) => {
+                markTouched("nickname", setNickname)(e);
+                setNicknameChecked(false);
+              }}
+              type="text"
+              placeholder="닉네임"
+              className="flex-grow rounded-lg px-4 py-3 shadow placeholder-gray-400 focus:ring-2 focus:ring-amber-400"
+            />
+            <button
+              type="button"
+              onClick={checkNicname}
+              disabled={!nickname || Boolean(errors.nickname)}
+              className="ml-3 flex-none whitespace-nowrap rounded-lg bg-amber-400 px-4 py-2 text-sm font-medium text-white shadow transition hover:bg-amber-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              중복확인
+            </button>
+          </div>
+          {errors.nickname && (touched.nickname || submitted) && (
+            <p className="text-xs text-red-500">{errors.nickname}</p>
+          )}
           {/* 주소 */}
           <input
             value={address}
@@ -232,22 +359,42 @@ export default function SignupPage() {
           <div className="flex items-center gap-3">
             <input
               value={phone1}
-              onChange={markTouched("phone1", setPhone1)}
+              onChange={(e) => {
+                markTouched("phone1", setPhone1, true)(e);
+                setPhoneChecked(false);
+              }}
               maxLength={3}
               className="w-1/4 rounded-lg px-2 py-3 text-center shadow focus:ring-2 focus:ring-amber-400"
             />
             <input
               value={phone2}
-              onChange={markTouched("phone2", setPhone2)}
+              onChange={(e) => {
+                markTouched("phone2", setPhone2, true)(e);
+                setPhoneChecked(false);
+              }}
               maxLength={4}
               className="w-1/4 rounded-lg px-2 py-3 text-center shadow focus:ring-2 focus:ring-amber-400"
             />
             <input
               value={phone3}
-              onChange={markTouched("phone3", setPhone3)}
+              onChange={(e) => {
+                markTouched("phone3", setPhone3, true)(e);
+                setPhoneChecked(false);
+              }}
               maxLength={4}
               className="w-1/4 rounded-lg px-2 py-3 text-center shadow focus:ring-2 focus:ring-amber-400"
             />
+            <button
+              type="button"
+              onClick={checkPhone}
+              disabled={
+                // phone1/2/3이 모두 채워져 있고, regex를 통과할 때만 활성화
+                !phone1 || !phone2 || !phone3 || Boolean(errors.phone)
+              }
+              className="ml-3 flex-none whitespace-nowrap rounded-lg bg-amber-400 px-4 py-2 text-sm font-medium text-white shadow transition hover:bg-amber-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              중복확인
+            </button>
           </div>
           {errors.phone && (touched.phone || submitted) && (
             <p className="text-xs text-red-500">{errors.phone}</p>
@@ -256,7 +403,9 @@ export default function SignupPage() {
           {/* 제출 */}
           <button
             type="submit"
-            className="mt-4 w-full rounded-lg bg-amber-400 py-3 font-semibold text-white shadow-md transition hover:bg-amber-500"
+            disabled={!isFormValid}
+            className="mt-4 w-full rounded-lg bg-amber-400 py-3 font-semibold text-white shadow-md transition 
+                   hover:bg-amber-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             가입하기
           </button>
