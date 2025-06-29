@@ -143,7 +143,45 @@ export default function SignupPage() {
           value: email,
         },
       });
-      console.log(res.data);
+      if (!res.data.result) {
+        console.log(res.data);
+      }
+    } catch (error: any) {
+      const msg =
+        error.response?.data?.message || "알 수 없는 오류가 발생했습니다.";
+      alert(`중복확인 실패: ${msg}`);
+    }
+  };
+
+  const checkNicname = async () => {
+    try {
+      const res = await api.get("/users/exist", {
+        params: {
+          field: "NICKNAME",
+          value: nickname,
+        },
+      });
+      if (!res.data.result) {
+        console.log(res.data);
+      }
+    } catch (error: any) {
+      const msg =
+        error.response?.data?.message || "알 수 없는 오류가 발생했습니다.";
+      alert(`중복확인 실패: ${msg}`);
+    }
+  };
+
+  const checkPhone = async () => {
+    try {
+      const res = await api.get("/users/exist", {
+        params: {
+          field: "PHONE",
+          value: phone1 + phone2 + phone3,
+        },
+      });
+      if (!res.data.result) {
+        console.log(res.data);
+      }
     } catch (error: any) {
       const msg =
         error.response?.data?.message || "알 수 없는 오류가 발생했습니다.";
@@ -273,6 +311,7 @@ export default function SignupPage() {
             />
             <button
               type="button"
+              onClick={checkNicname}
               disabled={!nickname || Boolean(errors.nickname)}
               className="ml-3 flex-none whitespace-nowrap rounded-lg bg-amber-400 px-4 py-2 text-sm font-medium text-white shadow transition hover:bg-amber-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
@@ -325,6 +364,7 @@ export default function SignupPage() {
             />
             <button
               type="button"
+              onClick={checkPhone}
               disabled={
                 // phone1/2/3이 모두 채워져 있고, regex를 통과할 때만 활성화
                 !phone1 || !phone2 || !phone3 || Boolean(errors.phone)
