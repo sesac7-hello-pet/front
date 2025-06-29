@@ -47,6 +47,23 @@ export default function SignupPage() {
   /* 에러 메시지 */
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  const isFormValid =
+    email &&
+    !errors.email &&
+    PASSWORD_REGEX.test(password) &&
+    !errors.password &&
+    !errors.passwordCheck &&
+    username &&
+    !errors.username &&
+    nickname &&
+    !errors.nickname &&
+    address &&
+    !errors.address &&
+    phone1 &&
+    phone2 &&
+    phone3 &&
+    !errors.phone;
+
   /* ── 실시간 유효성 검사 ──────────────────────────────── */
   useEffect(() => {
     validate(); // 한 글자만 바뀌어도 즉시 재검사
@@ -104,7 +121,7 @@ export default function SignupPage() {
     return Object.keys(errs).length === 0;
   };
 
-  /* ── 제출 ────────────────────────────────────────────── */
+  /* ── 한번이라도 텍스트 입력 했는지 체크 ─────────────────── */
 
   const markTouched =
     (field: string, setter: (v: string) => void, markPhone = false) =>
@@ -116,6 +133,23 @@ export default function SignupPage() {
         ...(markPhone ? { phone: true } : {}),
       }));
     };
+
+  /* ── 중복 체크 부분 ───────────────────────────────────── */
+  const checkEmail = async () => {
+    try {
+      const res = await api.get("/users/exist", {
+        params: {
+          field: "EMAIL",
+          value: email,
+        },
+      });
+      console.log(res.data);
+    } catch (error: any) {
+      const msg =
+        error.response?.data?.message || "알 수 없는 오류가 발생했습니다.";
+      alert(`중복확인 실패: ${msg}`);
+    }
+  };
 
   /* ── 제출 ────────────────────────────────────────────── */
   const handleSubmit = async (e: React.FormEvent) => {
@@ -183,8 +217,10 @@ export default function SignupPage() {
               className="flex-grow rounded-lg px-4 py-3 shadow placeholder-gray-400 focus:ring-2 focus:ring-amber-400"
             />
             <button
+              onClick={checkEmail}
+              disabled={!email || Boolean(errors.email)}
               type="button"
-              className="ml-3 flex-none whitespace-nowrap rounded-lg bg-amber-400 px-4 py-2 text-sm font-medium text-white shadow transition hover:bg-amber-500"
+              className="ml-3 flex-none whitespace-nowrap rounded-lg bg-amber-400 px-4 py-2 text-sm font-medium text-white shadow transition hover:bg-amber-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               중복확인
             </button>
@@ -237,7 +273,8 @@ export default function SignupPage() {
             />
             <button
               type="button"
-              className="ml-3 flex-none whitespace-nowrap rounded-lg bg-amber-400 px-4 py-2 text-sm font-medium text-white shadow transition hover:bg-amber-500"
+              disabled={!nickname || Boolean(errors.nickname)}
+              className="ml-3 flex-none whitespace-nowrap rounded-lg bg-amber-400 px-4 py-2 text-sm font-medium text-white shadow transition hover:bg-amber-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               중복확인
             </button>
@@ -288,7 +325,11 @@ export default function SignupPage() {
             />
             <button
               type="button"
-              className="ml-3 flex-none whitespace-nowrap rounded-lg bg-amber-400 px-4 py-2 text-sm font-medium text-white shadow transition hover:bg-amber-500"
+              disabled={
+                // phone1/2/3이 모두 채워져 있고, regex를 통과할 때만 활성화
+                !phone1 || !phone2 || !phone3 || Boolean(errors.phone)
+              }
+              className="ml-3 flex-none whitespace-nowrap rounded-lg bg-amber-400 px-4 py-2 text-sm font-medium text-white shadow transition hover:bg-amber-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               중복확인
             </button>
@@ -300,7 +341,9 @@ export default function SignupPage() {
           {/* 제출 */}
           <button
             type="submit"
-            className="mt-4 w-full rounded-lg bg-amber-400 py-3 font-semibold text-white shadow-md transition hover:bg-amber-500"
+            disabled={!isFormValid}
+            className="mt-4 w-full rounded-lg bg-amber-400 py-3 font-semibold text-white shadow-md transition 
+                   hover:bg-amber-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             가입하기
           </button>
