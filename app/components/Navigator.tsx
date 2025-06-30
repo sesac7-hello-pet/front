@@ -72,12 +72,13 @@ export default function Navigator() {
 
               <div className="mt-4 flex flex-col gap-2">
                 {/* 마이페이지(껍데기) */}
-                <p
+                <Link
+                  href="/me"
                   onClick={() => setOpen(false)}
                   className="rounded-md px-4 py-2 text-center text-sm hover:bg-gray-100"
                 >
                   마이페이지
-                </p>
+                </Link>
 
                 {/* 로그아웃 */}
                 <button
