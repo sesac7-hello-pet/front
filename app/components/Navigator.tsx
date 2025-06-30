@@ -31,10 +31,10 @@ export default function Navigator() {
   };
 
   return (
-    <nav className="flex items-center justify-between border-b border-gray-500 pt-0.5 pb-0.5 pr-4 pl-4">
+    <nav className="flex items-center justify-between border-b border-gray-500 pt-1 pb-0.5 pr-4 pl-4">
       {/* 좌측 로고 + 사이트명 */}
       <Link href="/" className="flex items-center gap-2">
-        <Image
+        <img
           src="/img3.png"
           alt="Home Logo"
           width={58}
