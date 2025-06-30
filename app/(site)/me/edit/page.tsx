@@ -1,6 +1,7 @@
 "use client";
 import api from "@/app/lib/api";
 import { UserDetailData } from "@/app/store/UserStore";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const PASSWORD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{6,}$/; // 영문·숫자·특수문자 포함 6자+
@@ -27,6 +28,8 @@ export default function EditPage() {
 
   /* 에러 메시지 */
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const router = useRouter();
 
   const isFormValid =
     PASSWORD_REGEX.test(password) &&
@@ -136,13 +139,38 @@ export default function EditPage() {
     );
   }
 
+  /* ── 제출 ────────────────────────────────────────────── */
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    // 1) 마지막 유효성 검사
+    if (!validate()) return;
+
+    // 2) 백엔드 DTO(UserRegisterRequest)에 맞춰 페이로드 구성
+    const payload = {
+      password,
+      nickname,
+      address,
+      userProfileUrl: profileUrl || null,
+    };
+    try {
+      const res = await api.put("/me", payload);
+      console.log(res);
+      alert("정보 수정이 완료되었습니다!");
+      router.push("/me");
+    } catch (error: any) {
+      const msg =
+        error.response?.data?.message || "알 수 없는 오류가 발생했습니다.";
+      alert(`정보 수정 실패: ${msg}`);
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen items-center justify-center bg-white">
       <h1 className="mb-8 text-center text-3xl font-bold tracking-widest text-amber-400">
         회원 정보 수정
       </h1>
 
-      <form className="space-y-4 w-[500px]">
+      <form onSubmit={handleSubmit} className="space-y-4 w-[500px]">
         {/* 이메일 */}
         <div className="flex items-center">
           <input
