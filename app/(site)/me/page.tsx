@@ -58,34 +58,54 @@ export default function MyPage() {
         <nav className="flex flex-col space-y-5 p-4">
           <button
             onClick={showMyPage}
-            className="w-40 rounded-lg bg-amber-50 text-amber-300 font-semibold py-2 shadow-sm hover:bg-amber-100"
+            className={`w-40 rounded-lg font-semibold py-2 shadow-sm transition ${
+              myPage
+                ? "bg-amber-400 text-white"
+                : "bg-amber-50 text-amber-300 hover:bg-amber-100"
+            }`}
           >
             개인정보수정
           </button>
           {user?.role === "ADMIN" ? (
             <button
               onClick={showRoleChangedBtn}
-              className="w-40 rounded-lg bg-amber-50 text-amber-300 font-semibold py-2 shadow-sm hover:bg-amber-100"
+              className={`w-40 rounded-lg font-semibold py-2 shadow-sm transition ${
+                roleChangedBtn
+                  ? "bg-amber-400 text-white"
+                  : "bg-amber-50 text-amber-300 hover:bg-amber-100"
+              }`}
             >
               공고내역
             </button>
           ) : (
             <button
               onClick={showRoleChangedBtn}
-              className="w-40 rounded-lg bg-amber-50 text-amber-300 font-semibold py-2 shadow-sm hover:bg-amber-100"
+              className={`w-40 rounded-lg font-semibold py-2 shadow-sm transition ${
+                roleChangedBtn
+                  ? "bg-amber-400 text-white"
+                  : "bg-amber-50 text-amber-300 hover:bg-amber-100"
+              }`}
             >
               입양신청내역
             </button>
           )}
           <button
             onClick={showMyBoard}
-            className="w-40 rounded-lg bg-amber-50 text-amber-300 font-semibold py-2 shadow-sm hover:bg-amber-100"
+            className={`w-40 rounded-lg font-semibold py-2 shadow-sm transition ${
+              myBoard
+                ? "bg-amber-400 text-white"
+                : "bg-amber-50 text-amber-300 hover:bg-amber-100"
+            }`}
           >
             내가 쓴 게시글
           </button>
           <button
             onClick={showMyComment}
-            className="w-40 rounded-lg bg-amber-50 text-amber-300 font-semibold py-2 shadow-sm hover:bg-amber-100"
+            className={`w-40 rounded-lg font-semibold py-2 shadow-sm transition ${
+              myComment
+                ? "bg-amber-400 text-white"
+                : "bg-amber-50 text-amber-300 hover:bg-amber-100"
+            }`}
           >
             내가 쓴 댓글
           </button>
