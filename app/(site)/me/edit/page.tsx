@@ -1,5 +1,40 @@
 "use client";
-export default function page() {
+import api from "@/app/lib/api";
+import { UserDetailData } from "@/app/store/UserStore";
+import { useEffect, useState } from "react";
+
+export default function EditPage() {
+  const [user, setUser] = useState<UserDetailData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getUserDetail();
+  }, []);
+
+  async function getUserDetail() {
+    try {
+      const res = await api.get<UserDetailData>("/me");
+      setUser(res.data);
+      console.log(res.data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (loading) {
+    return <div className="p-4 text-center">로딩 중...</div>;
+  }
+
+  if (!user) {
+    return (
+      <div className="p-4 text-center text-red-500">
+        유저 정보를 불러올 수 없습니다.
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col min-h-screen items-center justify-center bg-white">
       <h1 className="mb-8 text-center text-3xl font-bold tracking-widest text-amber-400">
