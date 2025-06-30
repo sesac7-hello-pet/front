@@ -75,6 +75,17 @@ export default function MyPage() {
                   : "bg-amber-50 text-amber-300 hover:bg-amber-100"
               }`}
             >
+              유저목록
+            </button>
+          ) : user?.role === "SHELTER" ? (
+            <button
+              onClick={showRoleChangedBtn}
+              className={`w-40 rounded-lg font-semibold py-2 shadow-sm transition ${
+                roleChangedBtn
+                  ? "bg-amber-400 text-white"
+                  : "bg-amber-50 text-amber-300 hover:bg-amber-100"
+              }`}
+            >
               공고내역
             </button>
           ) : (

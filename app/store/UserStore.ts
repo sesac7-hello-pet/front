@@ -8,6 +8,15 @@ interface User {
   profileUrl: string;
 }
 
+export interface UserDetailData {
+  email: string;
+  username: string;
+  nickname: string;
+  phoneNumber: string;
+  address: string;
+  profileUrl: string;
+}
+
 interface UserState {
   user: User | null;
   setUser: (u: User) => void;
