@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import api from "../lib/api";
+import Link from "next/link";
 
 interface UserDetailData {
   username: string;
@@ -43,7 +44,15 @@ export default function UserDetail() {
 
   return (
     <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow">
-      <h2 className="text-2xl font-bold mb-4 text-gray-800">내 정보</h2>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-2xl font-bold text-gray-800">내 정보</h2>
+        <Link
+          href="/me/edit"
+          className="rounded border border-gray-300 px-4 py-2 text-sm hover:bg-gray-100 transition"
+        >
+          내 정보 수정
+        </Link>
+      </div>
       <div className="space-y-3">
         <p>
           <span className="font-semibold text-gray-700">이름:</span>{" "}
