@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useUserStore } from "../store/UserStore";
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 export default function Navigator() {
   const { user, clearUser } = useUserStore();
@@ -30,14 +31,14 @@ export default function Navigator() {
   };
 
   return (
-    <nav className="flex items-center justify-between border-b border-gray-500 p-4">
+    <nav className="flex items-center justify-between border-b border-gray-500 pt-0.5 pb-0.5 pr-4 pl-4">
       {/* 좌측 로고 + 사이트명 */}
       <Link href="/" className="flex items-center gap-2">
-        <img
-          src="https://item.kakaocdn.net/do/ac3baf24423e7cd3d3a96fa33a333ee5f604e7b0e6900f9ac53a43965300eb9a"
+        <Image
+          src="/img3.png"
           alt="Home Logo"
-          width={50}
-          height={50}
+          width={58}
+          height={58}
           className="rounded-sm"
         />
         <span className="text-lg font-medium text-gray-700">Hello Pet</span>
