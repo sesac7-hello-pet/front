@@ -2,9 +2,43 @@
 
 import UserDetail from "@/app/components/UserDetail";
 import { useUserStore } from "@/app/store/UserStore";
+import { useState } from "react";
 
 export default function MyPage() {
   const user = useUserStore((s) => s.user);
+
+  const [myPage, setMyPage] = useState(true);
+  const [roleChangedBtn, setRoleChangedBtn] = useState(false);
+  const [myBoard, setMyBoard] = useState(false);
+  const [myComment, setMyComment] = useState(false);
+
+  function showMyPage() {
+    setMyPage(true);
+    setRoleChangedBtn(false);
+    setMyBoard(false);
+    setMyComment(false);
+  }
+
+  function showRoleChangedBtn() {
+    setMyPage(false);
+    setRoleChangedBtn(true);
+    setMyBoard(false);
+    setMyComment(false);
+  }
+
+  function showMyBoard() {
+    setMyPage(false);
+    setRoleChangedBtn(false);
+    setMyBoard(true);
+    setMyComment(false);
+  }
+
+  function showMyComment() {
+    setMyPage(false);
+    setRoleChangedBtn(false);
+    setMyBoard(false);
+    setMyComment(true);
+  }
 
   return (
     <div className="flex flex-col items-center justify-start h-screen bg-gray-50 pt-[5vh]">
@@ -22,16 +56,37 @@ export default function MyPage() {
       <div className="mt-12 flex w-full max-w-[960px] items-start">
         {/* ── 왼쪽 사이드 버튼 그룹 ── */}
         <nav className="flex flex-col space-y-5 p-4">
-          <button className="w-40 rounded-lg bg-amber-50 text-amber-300 font-semibold py-2 shadow-sm hover:bg-amber-100">
+          <button
+            onClick={showMyPage}
+            className="w-40 rounded-lg bg-amber-50 text-amber-300 font-semibold py-2 shadow-sm hover:bg-amber-100"
+          >
             개인정보수정
           </button>
-          <button className="w-40 rounded-lg bg-amber-50 text-amber-300 font-semibold py-2 shadow-sm hover:bg-amber-100">
-            입양신청내역
-          </button>
-          <button className="w-40 rounded-lg bg-amber-50 text-amber-300 font-semibold py-2 shadow-sm hover:bg-amber-100">
+          {user?.role === "ADMIN" ? (
+            <button
+              onClick={showRoleChangedBtn}
+              className="w-40 rounded-lg bg-amber-50 text-amber-300 font-semibold py-2 shadow-sm hover:bg-amber-100"
+            >
+              공고내역
+            </button>
+          ) : (
+            <button
+              onClick={showRoleChangedBtn}
+              className="w-40 rounded-lg bg-amber-50 text-amber-300 font-semibold py-2 shadow-sm hover:bg-amber-100"
+            >
+              입양신청내역
+            </button>
+          )}
+          <button
+            onClick={showMyBoard}
+            className="w-40 rounded-lg bg-amber-50 text-amber-300 font-semibold py-2 shadow-sm hover:bg-amber-100"
+          >
             내가 쓴 게시글
           </button>
-          <button className="w-40 rounded-lg bg-amber-50 text-amber-300 font-semibold py-2 shadow-sm hover:bg-amber-100">
+          <button
+            onClick={showMyComment}
+            className="w-40 rounded-lg bg-amber-50 text-amber-300 font-semibold py-2 shadow-sm hover:bg-amber-100"
+          >
             내가 쓴 댓글
           </button>
         </nav>
@@ -40,7 +95,10 @@ export default function MyPage() {
         <div className="flex-1 flex justify-center">
           <div className="w-full max-w-[720px] h-[650px] border border-gray-300 bg-white">
             {/* 기존 보드 콘텐츠 */}
-            <UserDetail />
+            {myPage ? <UserDetail /> : ""}
+            {roleChangedBtn ? <h1>roleChangedBtn</h1> : ""}
+            {myBoard ? <h1>myBoard</h1> : ""}
+            {myComment ? <h1>myComment</h1> : ""}
           </div>
         </div>
       </div>
