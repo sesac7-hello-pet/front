@@ -2,13 +2,7 @@
 import { useEffect, useState } from "react";
 import api from "../lib/api";
 import Link from "next/link";
-
-interface UserDetailData {
-  username: string;
-  nickname: string;
-  phoneNumber: string;
-  address: string;
-}
+import { UserDetailData } from "../store/UserStore";
 
 export default function UserDetail() {
   const [user, setUser] = useState<UserDetailData | null>(null);
