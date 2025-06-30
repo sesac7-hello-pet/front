@@ -1,5 +1,6 @@
 "use client";
 
+import UserDetail from "@/app/components/UserDetail";
 import { useUserStore } from "@/app/store/UserStore";
 
 export default function MyPage() {
@@ -39,6 +40,7 @@ export default function MyPage() {
         <div className="flex-1 flex justify-center">
           <div className="w-full max-w-[720px] h-[650px] border border-gray-300 bg-white">
             {/* 기존 보드 콘텐츠 */}
+            <UserDetail />
           </div>
         </div>
       </div>
