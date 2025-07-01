@@ -9,9 +9,11 @@ export default function Withdraw() {
   async function checkPassword() {
     try {
       const res = api.post("/auth/check-password", { password });
-      console.log((await res).data);
+      if ((await res).data.pass) {
+        alert((await res).data.message);
+      }
     } catch (err) {
-      console.error(err);
+      alert(err);
     }
   }
 
