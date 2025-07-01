@@ -38,12 +38,23 @@ export default function Withdraw() {
       disabled:cursor-not-allowed"
       />
 
-      {/* 비밀번호 검증하기 버튼 */}
-      <button
-        onClick={checkPassword}
-        type="button"
-        disabled={password.length === 0} // 입력 없으면 비활성화
-        className="
+      {verified ? (
+        <button
+          onClick={checkPassword}
+          type="button"
+          className=" mt-4
+      w-full
+      rounded-lg bg-red-500 py-3 text-center font-semibold text-white shadow-md transition 
+             hover:bg-red-600"
+        >
+          회원 탈퇴 하기
+        </button>
+      ) : (
+        <button
+          onClick={checkPassword}
+          type="button"
+          disabled={password.length === 0} // 입력 없으면 비활성화
+          className="
       mt-4
       w-full
       rounded-lg
@@ -57,9 +68,10 @@ export default function Withdraw() {
       disabled:opacity-50
       disabled:cursor-not-allowed
     "
-      >
-        비밀번호 확인
-      </button>
+        >
+          비밀번호 확인
+        </button>
+      )}
     </div>
   );
 }
