@@ -42,6 +42,12 @@ export default function Navigator() {
         />
         <span className="text-lg font-medium text-gray-700">Hello Pet</span>
       </Link>
+      <Link href="/announcements" className="flex items-center gap-2">
+        <span className="text-lg font-medium text-gray-700">announcement</span>
+      </Link>
+      <Link href="/boards" className="flex items-center gap-2">
+        <span className="text-lg font-medium text-gray-700">board</span>
+      </Link>
 
       {/* 우측: 로그인 or 아바타 */}
       {user ? (
