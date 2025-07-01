@@ -1,4 +1,20 @@
+"use client";
+
+import api from "@/app/lib/api";
+import React, { useState } from "react";
+
 export default function Withdraw() {
+  const [password, setPassword] = useState("");
+
+  async function checkPassword() {
+    try {
+      const res = api.post("/check_password", password);
+      console.log((await res).data);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   return (
     <div className="flex flex-col min-h-screen items-center justify-center bg-white px-4">
       {/* 회원 탈퇴 페이지 타이틀 */}
@@ -10,6 +26,8 @@ export default function Withdraw() {
       <input
         type="password"
         placeholder="비밀번호를 입력하세요"
+        value={password} // 3) value 바인딩
+        onChange={(e) => setPassword(e.target.value)} // 4) onChange 핸들러
         className="
       w-full
       rounded-lg
@@ -24,8 +42,9 @@ export default function Withdraw() {
 
       {/* 비밀번호 검증하기 버튼 */}
       <button
+        onClick={checkPassword}
         type="button"
-        disabled={false /* 비밀번호 입력 여부에 따라 활성/비활성 처리 */}
+        disabled={password.length === 0} // 입력 없으면 비활성화
         className="
       mt-4
       w-full
