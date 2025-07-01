@@ -23,7 +23,7 @@ export default function Withdraw() {
 
   async function withdraw() {
     try {
-      const res = api.delete("/users");
+      const res = api.delete("/me");
       alert("탈퇴 되었습니다.");
       router.push("/");
     } catch (err) {
