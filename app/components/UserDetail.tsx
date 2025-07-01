@@ -41,7 +41,7 @@ export default function UserDetail() {
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-2xl font-bold text-gray-800">내 정보</h2>
         <Link
-          href="/me/edit"
+          href="/auth/edit"
           className="rounded border border-gray-300 px-4 py-2 text-sm hover:bg-gray-100 transition"
         >
           내 정보 수정
