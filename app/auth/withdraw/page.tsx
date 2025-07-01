@@ -8,7 +8,7 @@ export default function Withdraw() {
 
   async function checkPassword() {
     try {
-      const res = api.post("/check_password", password);
+      const res = api.post("/auth/check-password", password);
       console.log((await res).data);
     } catch (err) {
       console.error(err);
