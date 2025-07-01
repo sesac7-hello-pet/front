@@ -1,6 +1,7 @@
 "use client";
 
 import UserDetail from "@/app/components/UserDetail";
+import UserList from "@/app/components/UserList";
 import { useUserStore } from "@/app/store/UserStore";
 import { useState } from "react";
 
@@ -127,7 +128,17 @@ export default function MyPage() {
           <div className="w-full max-w-[720px] h-[650px] border border-gray-300 bg-white">
             {/* 기존 보드 콘텐츠 */}
             {myPage ? <UserDetail /> : ""}
-            {roleChangedBtn ? <h1>roleChangedBtn</h1> : ""}
+            {roleChangedBtn ? (
+              user?.role === "ADMIN" ? (
+                <UserList />
+              ) : user?.role === "SHELTER" ? (
+                <div>shelter</div>
+              ) : (
+                <div>user</div>
+              )
+            ) : (
+              ""
+            )}
             {myBoard ? <h1>myBoard</h1> : ""}
             {myComment ? <h1>myComment</h1> : ""}
           </div>
