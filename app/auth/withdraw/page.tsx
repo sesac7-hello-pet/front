@@ -1,11 +1,13 @@
 "use client";
-
 import api from "@/app/lib/api";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 export default function Withdraw() {
   const [password, setPassword] = useState("");
   const [verified, setVerified] = useState(false);
+
+  const router = useRouter();
 
   async function checkPassword() {
     try {
@@ -14,6 +16,16 @@ export default function Withdraw() {
         alert((await res).data.message);
         setVerified(true);
       }
+    } catch (err) {
+      alert(err);
+    }
+  }
+
+  async function withdraw() {
+    try {
+      const res = api.delete("/users");
+      alert("탈퇴 되었습니다.");
+      router.push("/");
     } catch (err) {
       alert(err);
     }
@@ -40,7 +52,7 @@ export default function Withdraw() {
 
       {verified ? (
         <button
-          onClick={checkPassword}
+          onClick={withdraw}
           type="button"
           className=" mt-4
       w-full
