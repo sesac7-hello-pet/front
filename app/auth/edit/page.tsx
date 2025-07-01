@@ -1,6 +1,7 @@
 "use client";
 import api from "@/app/lib/api";
 import { UserDetailData } from "@/app/store/UserStore";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -284,6 +285,14 @@ export default function EditPage() {
         >
           수정하기
         </button>
+        {/* 회원 탈퇴 이동 */}
+        <Link
+          href="/auth/withdraw"
+          className="mt-3 block w-full rounded-lg bg-red-500 py-3 text-center font-semibold text-white shadow-md transition 
+             hover:bg-red-600"
+        >
+          회원 탈퇴하기
+        </Link>
       </form>
     </div>
   );
