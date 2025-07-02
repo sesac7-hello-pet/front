@@ -71,6 +71,11 @@ export default function UserList() {
       try {
         await api.delete(`/admin/users/${userId}`);
         alert("사용자가 비활성화되었습니다.");
+        setUsers((currentUsers) =>
+          currentUsers.map((user) =>
+            user.id === userId ? { ...user, activation: false } : user
+          )
+        );
         router.refresh();
       } catch (err) {
         alert("비활성화 실패: " + (err as Error).message);
@@ -196,8 +201,8 @@ export default function UserList() {
               className={`text-sm font-bold py-1 px-3 rounded transition-colors
   ${
     u.role === "ADMIN" || !u.activation
-      ? "bg-gray-400 text-gray-700 cursor-not-allowed" // 비활성화 상태 (회색)
-      : "bg-red-500 text-white hover:bg-red-700" // 활성화 상태 (빨간색)
+      ? "bg-gray-400 text-gray-700 cursor-not-allowed"
+      : "bg-red-500 text-white hover:bg-red-700"
   }
     `}
             >
