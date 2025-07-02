@@ -68,7 +68,7 @@ export default function UserList() {
   async function handleDeactivate(userId: number) {
     if (window.confirm("정말로 이 사용자를 비활성화하시겠습니까?")) {
       try {
-        await api.post("/auth/deactivate", { id: userId });
+        await api.delete(`/admin/users/${userId}`);
         alert("사용자가 비활성화되었습니다.");
         router.refresh();
       } catch (err) {
