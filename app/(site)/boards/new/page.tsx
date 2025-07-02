@@ -1,11 +1,13 @@
 "use client";
 
 import api from "@/app/lib/api";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 
 export default function BoardCreate() {
   const [category, setCategory] = useState<string>("커뮤니티");
   const [petType, setPetType] = useState<string>("강아지");
+  const title = useRef<HTMLInputElement>(null);
+  const content = useRef<HTMLTextAreaElement>(null);
 
   const changeButton = (state: string, current: string) =>
     `w-40 rounded-lg font-semibold py-2 shadow-sm transition ${
@@ -22,14 +24,24 @@ export default function BoardCreate() {
     setPetType(selectd);
   }
 
+  const categoryMap: Record<string, string> = {
+    커뮤니티: "FREE",
+    "Q & A": "QNA",
+  };
+  const petTypeMap: Record<string, string> = {
+    강아지: "DOG",
+    고양이: "CAT",
+    기타: "ETC",
+  };
+
   async function createBoard(e: React.FormEvent) {
     e.preventDefault();
     const payload = {
-      title: "title",
-      content: "content",
+      title: title,
+      content: content,
       img_url: "img_url",
-      boardCategory: "QNA",
-      petType: "DOG",
+      boardCategory: categoryMap[category],
+      petType: petTypeMap[petType],
     };
 
     const res = await api.post("/boards", payload);
@@ -77,10 +89,13 @@ export default function BoardCreate() {
         </p>
         <form onSubmit={createBoard}>
           <p>
-            <input type="text" placeholder="제목을 입력해주세요." />
+            <input type="text" ref={title} placeholder="제목을 입력해주세요." />
           </p>
           <p>
-            <textarea placeholder="5자 이상의 내용을 입력해주세요."></textarea>
+            <textarea
+              ref={content}
+              placeholder="5자 이상의 내용을 입력해주세요."
+            ></textarea>
           </p>
           <p>
             <label>사진업로드</label>
