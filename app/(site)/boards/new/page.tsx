@@ -37,22 +37,30 @@ export default function BoardCreate() {
   async function createBoard(e: React.FormEvent) {
     e.preventDefault();
 
+    const checkTitle = title.current?.value ?? "";
+    const checkContent = content.current?.value ?? "";
+
     // 유효성 검사
-    if (!title || !content) {
+    if (!checkTitle || !checkContent) {
       alert("제목과 내용을 모두 입력해주세요!!");
       return;
     }
 
     const payload = {
-      title: title,
-      content: content,
+      title: checkTitle,
+      content: checkContent,
       img_url: "img_url",
       boardCategory: categoryMap[category],
       petType: petTypeMap[petType],
     };
 
-    const res = await api.post("/boards", payload);
-    //console.log(res.data);
+    try {
+      const res = await api.post("/boards", payload);
+      alert("글이 등록되었습니다!!");
+    } catch (err) {
+      console.error("등록실패", err);
+      alert("등록에 실패했습니다. 다시 시도해주세요");
+    }
   }
 
   return (
