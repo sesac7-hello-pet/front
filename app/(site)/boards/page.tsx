@@ -7,7 +7,7 @@ interface Board {
   id: number;
   nickname: string;
   title: string;
-  createAt: string;
+  createdAt: string;
 }
 
 export default function BoardListPage() {
@@ -36,7 +36,7 @@ export default function BoardListPage() {
     <ul>
       {boards.map((board) => (
         <li key={board.id}>
-          {board.nickname}, {board.title} | {board.createAt}
+          {board.nickname}, {board.title} | {board.createdAt}
         </li>
       ))}
     </ul>
