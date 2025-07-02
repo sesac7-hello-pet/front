@@ -170,7 +170,16 @@ export default function UserList() {
       <ul className="space-y-1">
         {users.map((u) => (
           <li key={u.id}>
-            {u.role} / {u.username} / {u.email} / {u.nickname} / {u.phoneNumber}
+            <span>
+              8 {u.role} / {u.username} / {u.email} / {u.nickname} /{" "}
+              {u.phoneNumber}9{" "}
+            </span>
+            <button
+              onClick={() => handleDeactive(u.id)}
+              className="bg-red-500 text-white text-sm font-bold py-1 px-3 rounded hover:bg-red-700 transition-colors"
+            >
+              ❌
+            </button>
           </li>
         ))}
       </ul>
