@@ -11,6 +11,7 @@ interface User {
   nickname: string;
   username: string;
   phoneNumber: string;
+  activation: boolean;
 }
 
 const SEARCH_TYPES = ["TOTAL", "USERNAME", "EMAIL", "NICKNAME"] as const;
@@ -51,7 +52,7 @@ export default function UserList() {
   }, [currentPage, searchType, sortType, orderType, keyword]);
 
   async function fetchUsers(page: number) {
-    const res = await api.get("/users", {
+    const res = await api.get("/admin/users", {
       params: {
         page: page - 1,
         size: pageSize,
@@ -191,10 +192,10 @@ export default function UserList() {
             </span>
             <button
               onClick={() => handleDeactivate(u.id)}
-              disabled={u.role === "ADMIN"}
+              disabled={u.role === "ADMIN" || !u.activation}
               className={`text-sm font-bold py-1 px-3 rounded transition-colors
   ${
-    u.role === "ADMIN"
+    u.role === "ADMIN" || !u.activation
       ? "bg-gray-400 text-gray-700 cursor-not-allowed" // 비활성화 상태 (회색)
       : "bg-red-500 text-white hover:bg-red-700" // 활성화 상태 (빨간색)
   }
