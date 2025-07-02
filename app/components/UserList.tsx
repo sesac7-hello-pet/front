@@ -191,7 +191,14 @@ export default function UserList() {
             </span>
             <button
               onClick={() => handleDeactivate(u.id)}
-              className="bg-red-500 text-white text-sm font-bold py-1 px-3 rounded hover:bg-red-700 transition-colors"
+              disabled={u.role === "ADMIN"}
+              className={`text-sm font-bold py-1 px-3 rounded transition-colors
+  ${
+    u.role === "ADMIN"
+      ? "bg-gray-400 text-gray-700 cursor-not-allowed" // 비활성화 상태 (회색)
+      : "bg-red-500 text-white hover:bg-red-700" // 활성화 상태 (빨간색)
+  }
+    `}
             >
               ❌
             </button>
