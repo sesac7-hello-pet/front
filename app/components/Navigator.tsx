@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useUserStore } from "../store/UserStore";
 import { useEffect, useRef, useState } from "react";
+import api from "../lib/api";
 
 export default function Navigator() {
   const { user, clearUser } = useUserStore();
@@ -24,9 +25,14 @@ export default function Navigator() {
   }, [open]);
 
   /* ── 로그아웃 ── */
-  const logout = () => {
-    clearUser();
-    setOpen(false);
+  const logout = async () => {
+    try {
+      await api.delete("/auth/logout");
+      clearUser();
+      setOpen(false);
+    } catch (err) {
+      alert("로그아웃 실패: " + (err as Error).message);
+    }
   };
 
   return (
