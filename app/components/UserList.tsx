@@ -65,7 +65,7 @@ export default function UserList() {
     setTotalPages(res.data.totalPages);
   }
 
-  async function handleDeactive(userId: number) {
+  async function handleDeactivate(userId: number) {
     if (window.confirm("정말로 이 사용자를 비활성화하시겠습니까?")) {
       try {
         await api.post("/auth/deactivate", { id: userId });
@@ -186,11 +186,11 @@ export default function UserList() {
         {users.map((u) => (
           <li key={u.id}>
             <span>
-              8 {u.role} / {u.username} / {u.email} / {u.nickname} /{" "}
-              {u.phoneNumber}9{" "}
+              {u.role} / {u.username} / {u.email} / {u.nickname} /
+              {u.phoneNumber}
             </span>
             <button
-              onClick={() => handleDeactive(u.id)}
+              onClick={() => handleDeactivate(u.id)}
               className="bg-red-500 text-white text-sm font-bold py-1 px-3 rounded hover:bg-red-700 transition-colors"
             >
               ❌
