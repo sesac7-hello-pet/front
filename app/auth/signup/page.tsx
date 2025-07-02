@@ -4,7 +4,7 @@
 import api from "@/app/lib/api";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 /* ── 역할 매핑 ─────────────────────────────────────────────── */
 const ROLE_LABELS = ["유저", "보호소", "관리자"] as const;
@@ -46,7 +46,7 @@ export default function SignupPage() {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
   /* 제출 시 true → 모든 에러 표시 */
-  const [submitted, setSubmitted] = useState(false);
+  const submitted = useRef(false);
 
   /* 에러 메시지 */
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -66,6 +66,9 @@ export default function SignupPage() {
     phone1 &&
     phone2 &&
     phone3 &&
+    emailChecked &&
+    nicknameChecked &&
+    phoneChecked &&
     !errors.phone;
 
   /* ── 실시간 유효성 검사 ──────────────────────────────── */
@@ -151,9 +154,8 @@ export default function SignupPage() {
         setEmailChecked(true);
         alert(res.data.message);
       }
-    } catch (error: any) {
-      const msg =
-        error.response?.data?.message || "알 수 없는 오류가 발생했습니다.";
+    } catch (error) {
+      const msg = (error as Error).message || "알 수 없는 오류가 발생했습니다.";
       alert(`중복확인 실패: ${msg}`);
     }
   };
@@ -170,9 +172,8 @@ export default function SignupPage() {
         setNicknameChecked(true);
         alert(res.data.message);
       }
-    } catch (error: any) {
-      const msg =
-        error.response?.data?.message || "알 수 없는 오류가 발생했습니다.";
+    } catch (error) {
+      const msg = (error as Error).message || "알 수 없는 오류가 발생했습니다.";
       alert(`중복확인 실패: ${msg}`);
     }
   };
@@ -189,9 +190,8 @@ export default function SignupPage() {
         setPhoneChecked(true);
         alert(res.data.message);
       }
-    } catch (error: any) {
-      const msg =
-        error.response?.data?.message || "알 수 없는 오류가 발생했습니다.";
+    } catch (error) {
+      const msg = (error as Error).message || "알 수 없는 오류가 발생했습니다.";
       alert(`중복확인 실패: ${msg}`);
     }
   };
@@ -218,9 +218,8 @@ export default function SignupPage() {
       console.log(res);
       alert("회원가입이 완료되었습니다!");
       router.push("/auth/login");
-    } catch (error: any) {
-      const msg =
-        error.response?.data?.message || "알 수 없는 오류가 발생했습니다.";
+    } catch (error) {
+      const msg = (error as Error).message || "알 수 없는 오류가 발생했습니다.";
       alert(`회원가입 실패: ${msg}`);
     }
   };

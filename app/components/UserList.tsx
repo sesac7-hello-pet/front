@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import api from "../lib/api";
+import { useRouter } from "next/navigation";
 
 interface User {
   id: number;
@@ -27,6 +28,8 @@ export default function UserList() {
   const [users, setUsers] = useState<User[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+
+  const router = useRouter();
 
   /* 검색·정렬 조건 ----------------------- */
   const [searchType, setSearchType] =
@@ -60,6 +63,18 @@ export default function UserList() {
     });
     setUsers(res.data.adminUserList);
     setTotalPages(res.data.totalPages);
+  }
+
+  async function handleDeactivate(userId: number) {
+    if (window.confirm("정말로 이 사용자를 비활성화하시겠습니까?")) {
+      try {
+        await api.post("/auth/deactivate", { id: userId });
+        alert("사용자가 비활성화되었습니다.");
+        router.refresh();
+      } catch (err) {
+        alert("비활성화 실패: " + (err as Error).message);
+      }
+    }
   }
 
   function goTo(page: number) {
@@ -170,7 +185,16 @@ export default function UserList() {
       <ul className="space-y-1">
         {users.map((u) => (
           <li key={u.id}>
-            {u.role} / {u.username} / {u.email} / {u.nickname} / {u.phoneNumber}
+            <span>
+              {u.role} / {u.username} / {u.email} / {u.nickname} /
+              {u.phoneNumber}
+            </span>
+            <button
+              onClick={() => handleDeactivate(u.id)}
+              className="bg-red-500 text-white text-sm font-bold py-1 px-3 rounded hover:bg-red-700 transition-colors"
+            >
+              ❌
+            </button>
           </li>
         ))}
       </ul>
