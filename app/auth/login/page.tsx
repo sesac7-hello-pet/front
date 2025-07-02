@@ -33,7 +33,7 @@ export default function LoginPage() {
   }
 
   return (
-    <RequireRole notAllow={["USER", "ADMIN", "SHELTER"]} fallback="/">
+    <RequireRole notAllow={["USER", "ADMIN", "SHELTER"]}>
       <div className="flex min-h-screen items-center justify-center bg-white">
         <div className="w-full max-w-md rounded-2xl shadow-[0_0_0_4px_rgba(253,224,71,0.25)] p-10">
           <h1 className="mb-12 text-center text-4xl font-bold tracking-widest text-amber-400">

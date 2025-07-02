@@ -227,7 +227,7 @@ export default function SignupPage() {
 
   /* ── UI ──────────────────────────────────────────────── */
   return (
-    <RequireRole notAllow={["USER", "ADMIN", "SHELTER"]} fallback="/">
+    <RequireRole notAllow={["USER", "ADMIN", "SHELTER"]}>
       <div className="flex min-h-screen items-center justify-center bg-white">
         <div className="w-full max-w-md rounded-2xl p-10 shadow-[0_0_0_4px_rgba(253,224,71,0.25)]">
           {/* 역할 선택 */}
