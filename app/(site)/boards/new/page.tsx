@@ -14,10 +14,18 @@ export default function BoardCreate() {
           <button>기타</button>
         </p>
         <form>
-          <input type="text" placeholder="제목을 입력해주세요." />
-        </form>
-        <form>
-          <textarea placeholder="5자 이상의 내용을 입력해주세요."></textarea>
+          <p>
+            <input type="text" placeholder="제목을 입력해주세요." />
+          </p>
+          <p>
+            <textarea placeholder="5자 이상의 내용을 입력해주세요."></textarea>
+          </p>
+          <p>
+            <label>사진업로드</label>
+            <input type="file" />
+            <button>사진첨부</button>
+          </p>
+          <button>등록하기</button>
         </form>
       </div>
     </div>
