@@ -62,6 +62,11 @@ export default function UserList() {
     setTotalPages(res.data.totalPages);
   }
 
+  async function handleDeactive(userId: number) {
+    if (window.confirm("정말로 이 사용자를 비활성화하시겠습니까?")) {
+    }
+  }
+
   function goTo(page: number) {
     if (page < 1) page = 1;
     if (page > totalPages) page = totalPages;
