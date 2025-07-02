@@ -1,6 +1,7 @@
 // app/(auth)/signup/page.tsx
 "use client";
 
+import RequireRole from "@/app/components/RequireRole";
 import api from "@/app/lib/api";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -226,199 +227,201 @@ export default function SignupPage() {
 
   /* ── UI ──────────────────────────────────────────────── */
   return (
-    <div className="flex min-h-screen items-center justify-center bg-white">
-      <div className="w-full max-w-md rounded-2xl p-10 shadow-[0_0_0_4px_rgba(253,224,71,0.25)]">
-        {/* 역할 선택 */}
-        <div className="mb-6 flex justify-center gap-4">
-          {ROLE_LABELS.map((label) => (
-            <button
-              key={label}
-              type="button"
-              onClick={() => setRole(label)}
-              className={`rounded-full border px-4 py-1 text-sm transition ${
-                role === label
-                  ? "border-amber-400 bg-amber-400 text-white"
-                  : "border-gray-300 text-gray-600 hover:border-amber-400"
-              }`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-
-        <h1 className="mb-8 text-center text-3xl font-bold tracking-widest text-amber-400">
-          {role} 회원가입
-        </h1>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* 이메일 */}
-          <div className="flex items-center">
-            <input
-              value={email}
-              onChange={(e) => {
-                markTouched("email", setEmail)(e);
-                setEmailChecked(false);
-              }}
-              type="email"
-              placeholder="이메일"
-              className="flex-grow rounded-lg px-4 py-3 shadow placeholder-gray-400 focus:ring-2 focus:ring-amber-400"
-            />
-            <button
-              onClick={checkEmail}
-              disabled={!email || Boolean(errors.email)}
-              type="button"
-              className="ml-3 flex-none whitespace-nowrap rounded-lg bg-amber-400 px-4 py-2 text-sm font-medium text-white shadow transition hover:bg-amber-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              중복확인
-            </button>
+    <RequireRole notAllow={["USER", "ADMIN", "SHELTER"]} fallback="/">
+      <div className="flex min-h-screen items-center justify-center bg-white">
+        <div className="w-full max-w-md rounded-2xl p-10 shadow-[0_0_0_4px_rgba(253,224,71,0.25)]">
+          {/* 역할 선택 */}
+          <div className="mb-6 flex justify-center gap-4">
+            {ROLE_LABELS.map((label) => (
+              <button
+                key={label}
+                type="button"
+                onClick={() => setRole(label)}
+                className={`rounded-full border px-4 py-1 text-sm transition ${
+                  role === label
+                    ? "border-amber-400 bg-amber-400 text-white"
+                    : "border-gray-300 text-gray-600 hover:border-amber-400"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
           </div>
-          {errors.email && (touched.email || submitted) && (
-            <p className="text-xs text-red-500">{errors.email}</p>
-          )}
 
-          {/* 비밀번호 */}
-          <input
-            value={password}
-            onChange={markTouched("password", setPassword)}
-            type="password"
-            placeholder="비밀번호"
-            className="w-full rounded-lg px-4 py-3 shadow placeholder-gray-400 focus:ring-2 focus:ring-amber-400"
-          />
-          <input
-            value={passwordCheck}
-            onChange={markTouched("passwordCheck", setPasswordCheck)}
-            type="password"
-            placeholder="비밀번호 확인"
-            className="w-full rounded-lg px-4 py-3 shadow placeholder-gray-400 focus:ring-2 focus:ring-amber-400"
-          />
-          {(errors.password || errors.passwordCheck) &&
-            (touched.password || submitted) && (
-              <p className="text-xs text-red-500">
-                {errors.password ?? errors.passwordCheck}
-              </p>
+          <h1 className="mb-8 text-center text-3xl font-bold tracking-widest text-amber-400">
+            {role} 회원가입
+          </h1>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* 이메일 */}
+            <div className="flex items-center">
+              <input
+                value={email}
+                onChange={(e) => {
+                  markTouched("email", setEmail)(e);
+                  setEmailChecked(false);
+                }}
+                type="email"
+                placeholder="이메일"
+                className="flex-grow rounded-lg px-4 py-3 shadow placeholder-gray-400 focus:ring-2 focus:ring-amber-400"
+              />
+              <button
+                onClick={checkEmail}
+                disabled={!email || Boolean(errors.email)}
+                type="button"
+                className="ml-3 flex-none whitespace-nowrap rounded-lg bg-amber-400 px-4 py-2 text-sm font-medium text-white shadow transition hover:bg-amber-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                중복확인
+              </button>
+            </div>
+            {errors.email && (touched.email || submitted) && (
+              <p className="text-xs text-red-500">{errors.email}</p>
             )}
 
-          {/* 이름 & 닉네임 */}
-          <input
-            value={username}
-            onChange={markTouched("username", setUsername)}
-            type="text"
-            placeholder="이름 (2~10자)"
-            className="w-full rounded-lg px-4 py-3 shadow placeholder-gray-400 focus:ring-2 focus:ring-amber-400"
-          />
-          {errors.username && (touched.username || submitted) && (
-            <p className="text-xs text-red-500">{errors.username}</p>
-          )}
-
-          <div className="flex items-center">
+            {/* 비밀번호 */}
             <input
-              value={nickname}
-              onChange={(e) => {
-                markTouched("nickname", setNickname)(e);
-                setNicknameChecked(false);
-              }}
+              value={password}
+              onChange={markTouched("password", setPassword)}
+              type="password"
+              placeholder="비밀번호"
+              className="w-full rounded-lg px-4 py-3 shadow placeholder-gray-400 focus:ring-2 focus:ring-amber-400"
+            />
+            <input
+              value={passwordCheck}
+              onChange={markTouched("passwordCheck", setPasswordCheck)}
+              type="password"
+              placeholder="비밀번호 확인"
+              className="w-full rounded-lg px-4 py-3 shadow placeholder-gray-400 focus:ring-2 focus:ring-amber-400"
+            />
+            {(errors.password || errors.passwordCheck) &&
+              (touched.password || submitted) && (
+                <p className="text-xs text-red-500">
+                  {errors.password ?? errors.passwordCheck}
+                </p>
+              )}
+
+            {/* 이름 & 닉네임 */}
+            <input
+              value={username}
+              onChange={markTouched("username", setUsername)}
               type="text"
-              placeholder="닉네임"
-              className="flex-grow rounded-lg px-4 py-3 shadow placeholder-gray-400 focus:ring-2 focus:ring-amber-400"
+              placeholder="이름 (2~10자)"
+              className="w-full rounded-lg px-4 py-3 shadow placeholder-gray-400 focus:ring-2 focus:ring-amber-400"
             />
+            {errors.username && (touched.username || submitted) && (
+              <p className="text-xs text-red-500">{errors.username}</p>
+            )}
+
+            <div className="flex items-center">
+              <input
+                value={nickname}
+                onChange={(e) => {
+                  markTouched("nickname", setNickname)(e);
+                  setNicknameChecked(false);
+                }}
+                type="text"
+                placeholder="닉네임"
+                className="flex-grow rounded-lg px-4 py-3 shadow placeholder-gray-400 focus:ring-2 focus:ring-amber-400"
+              />
+              <button
+                type="button"
+                onClick={checkNicname}
+                disabled={!nickname || Boolean(errors.nickname)}
+                className="ml-3 flex-none whitespace-nowrap rounded-lg bg-amber-400 px-4 py-2 text-sm font-medium text-white shadow transition hover:bg-amber-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                중복확인
+              </button>
+            </div>
+            {errors.nickname && (touched.nickname || submitted) && (
+              <p className="text-xs text-red-500">{errors.nickname}</p>
+            )}
+            {/* 주소 */}
+            <input
+              value={address}
+              onChange={markTouched("address", setAddress)}
+              type="text"
+              placeholder="주소"
+              className="w-full rounded-lg px-4 py-3 shadow placeholder-gray-400 focus:ring-2 focus:ring-amber-400"
+            />
+            {errors.address && (touched.address || submitted) && (
+              <p className="text-xs text-red-500">{errors.address}</p>
+            )}
+
+            {/* 프로필 URL */}
+            <input
+              value={profileUrl}
+              onChange={markTouched("profileUrl", setProfileUrl)}
+              type="url"
+              placeholder="프로필 사진 URL"
+              className="w-full rounded-lg px-4 py-3 shadow placeholder-gray-400 focus:ring-2 focus:ring-amber-400"
+            />
+
+            {/* 휴대폰 번호 */}
+            <div className="flex items-center gap-3">
+              <input
+                value={phone1}
+                onChange={(e) => {
+                  markTouched("phone1", setPhone1, true)(e);
+                  setPhoneChecked(false);
+                }}
+                maxLength={3}
+                className="w-1/4 rounded-lg px-2 py-3 text-center shadow focus:ring-2 focus:ring-amber-400"
+              />
+              <input
+                value={phone2}
+                onChange={(e) => {
+                  markTouched("phone2", setPhone2, true)(e);
+                  setPhoneChecked(false);
+                }}
+                maxLength={4}
+                className="w-1/4 rounded-lg px-2 py-3 text-center shadow focus:ring-2 focus:ring-amber-400"
+              />
+              <input
+                value={phone3}
+                onChange={(e) => {
+                  markTouched("phone3", setPhone3, true)(e);
+                  setPhoneChecked(false);
+                }}
+                maxLength={4}
+                className="w-1/4 rounded-lg px-2 py-3 text-center shadow focus:ring-2 focus:ring-amber-400"
+              />
+              <button
+                type="button"
+                onClick={checkPhone}
+                disabled={
+                  // phone1/2/3이 모두 채워져 있고, regex를 통과할 때만 활성화
+                  !phone1 || !phone2 || !phone3 || Boolean(errors.phone)
+                }
+                className="ml-3 flex-none whitespace-nowrap rounded-lg bg-amber-400 px-4 py-2 text-sm font-medium text-white shadow transition hover:bg-amber-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                중복확인
+              </button>
+            </div>
+            {errors.phone && (touched.phone || submitted) && (
+              <p className="text-xs text-red-500">{errors.phone}</p>
+            )}
+
+            {/* 제출 */}
             <button
-              type="button"
-              onClick={checkNicname}
-              disabled={!nickname || Boolean(errors.nickname)}
-              className="ml-3 flex-none whitespace-nowrap rounded-lg bg-amber-400 px-4 py-2 text-sm font-medium text-white shadow transition hover:bg-amber-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              중복확인
-            </button>
-          </div>
-          {errors.nickname && (touched.nickname || submitted) && (
-            <p className="text-xs text-red-500">{errors.nickname}</p>
-          )}
-          {/* 주소 */}
-          <input
-            value={address}
-            onChange={markTouched("address", setAddress)}
-            type="text"
-            placeholder="주소"
-            className="w-full rounded-lg px-4 py-3 shadow placeholder-gray-400 focus:ring-2 focus:ring-amber-400"
-          />
-          {errors.address && (touched.address || submitted) && (
-            <p className="text-xs text-red-500">{errors.address}</p>
-          )}
-
-          {/* 프로필 URL */}
-          <input
-            value={profileUrl}
-            onChange={markTouched("profileUrl", setProfileUrl)}
-            type="url"
-            placeholder="프로필 사진 URL"
-            className="w-full rounded-lg px-4 py-3 shadow placeholder-gray-400 focus:ring-2 focus:ring-amber-400"
-          />
-
-          {/* 휴대폰 번호 */}
-          <div className="flex items-center gap-3">
-            <input
-              value={phone1}
-              onChange={(e) => {
-                markTouched("phone1", setPhone1, true)(e);
-                setPhoneChecked(false);
-              }}
-              maxLength={3}
-              className="w-1/4 rounded-lg px-2 py-3 text-center shadow focus:ring-2 focus:ring-amber-400"
-            />
-            <input
-              value={phone2}
-              onChange={(e) => {
-                markTouched("phone2", setPhone2, true)(e);
-                setPhoneChecked(false);
-              }}
-              maxLength={4}
-              className="w-1/4 rounded-lg px-2 py-3 text-center shadow focus:ring-2 focus:ring-amber-400"
-            />
-            <input
-              value={phone3}
-              onChange={(e) => {
-                markTouched("phone3", setPhone3, true)(e);
-                setPhoneChecked(false);
-              }}
-              maxLength={4}
-              className="w-1/4 rounded-lg px-2 py-3 text-center shadow focus:ring-2 focus:ring-amber-400"
-            />
-            <button
-              type="button"
-              onClick={checkPhone}
-              disabled={
-                // phone1/2/3이 모두 채워져 있고, regex를 통과할 때만 활성화
-                !phone1 || !phone2 || !phone3 || Boolean(errors.phone)
-              }
-              className="ml-3 flex-none whitespace-nowrap rounded-lg bg-amber-400 px-4 py-2 text-sm font-medium text-white shadow transition hover:bg-amber-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              중복확인
-            </button>
-          </div>
-          {errors.phone && (touched.phone || submitted) && (
-            <p className="text-xs text-red-500">{errors.phone}</p>
-          )}
-
-          {/* 제출 */}
-          <button
-            type="submit"
-            disabled={!isFormValid}
-            className="mt-4 w-full rounded-lg bg-amber-400 py-3 font-semibold text-white shadow-md transition 
+              type="submit"
+              disabled={!isFormValid}
+              className="mt-4 w-full rounded-lg bg-amber-400 py-3 font-semibold text-white shadow-md transition 
                    hover:bg-amber-500 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            가입하기
-          </button>
-        </form>
+            >
+              가입하기
+            </button>
+          </form>
 
-        <div className="mt-6 text-center">
-          <Link
-            href="/auth/login"
-            className="text-sm text-amber-400 hover:underline"
-          >
-            이미 계정이 있으신가요? 로그인
-          </Link>
+          <div className="mt-6 text-center">
+            <Link
+              href="/auth/login"
+              className="text-sm text-amber-400 hover:underline"
+            >
+              이미 계정이 있으신가요? 로그인
+            </Link>
+          </div>
         </div>
       </div>
-    </div>
+    </RequireRole>
   );
 }
