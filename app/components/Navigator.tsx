@@ -3,11 +3,13 @@ import Link from "next/link";
 import { useUserStore } from "../store/UserStore";
 import { useEffect, useRef, useState } from "react";
 import api from "../lib/api";
+import { useRouter } from "next/navigation";
 
 export default function Navigator() {
   const { user, clearUser } = useUserStore();
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   /* ── 바깥 클릭 시 닫기 ── */
   useEffect(() => {
@@ -30,6 +32,8 @@ export default function Navigator() {
       await api.delete("/auth/logout");
       clearUser();
       setOpen(false);
+      router.push("/");
+      alert("로그아웃 되었습니다.");
     } catch (err) {
       alert("로그아웃 실패: " + (err as Error).message);
     }
