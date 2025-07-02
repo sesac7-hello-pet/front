@@ -5,7 +5,7 @@ export default function BoardCreate() {
         <p>
           카테고리
           <button>커뮤니티</button>
-          <button>Q&A</button>
+          <button>Q & A</button>
         </p>
         <p>
           동물 종류
@@ -13,6 +13,12 @@ export default function BoardCreate() {
           <button>고양이</button>
           <button>기타</button>
         </p>
+        <form>
+          <input type="text" placeholder="제목을 입력해주세요." />
+        </form>
+        <form>
+          <textarea placeholder="5자 이상의 내용을 입력해주세요."></textarea>
+        </form>
       </div>
     </div>
   );
