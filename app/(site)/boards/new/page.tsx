@@ -36,6 +36,13 @@ export default function BoardCreate() {
 
   async function createBoard(e: React.FormEvent) {
     e.preventDefault();
+
+    // 유효성 검사
+    if (!title || !content) {
+      alert("제목과 내용을 모두 입력해주세요!!");
+      return;
+    }
+
     const payload = {
       title: title,
       content: content,
@@ -45,7 +52,7 @@ export default function BoardCreate() {
     };
 
     const res = await api.post("/boards", payload);
-    console.log(res.data);
+    //console.log(res.data);
   }
 
   return (
