@@ -1,6 +1,7 @@
 "use client";
 
 import api from "@/app/lib/api";
+import { BADHINTS } from "dns";
 import { useEffect, useState } from "react";
 
 enum Category {
@@ -61,18 +62,27 @@ export default function BoardListPage() {
   if (loading) return <h1>Loading…</h1>;
 
   return (
-    <ul>
-      {boards.map((board) => (
-        <li key={board.id}>
-          {Category[board.category as keyof typeof Category]}
-          {petType[board.petType as keyof typeof petType]}
-          {board.title}
-          {board.content}
-          {board.nickname}
-          {board.viewsCount}|{board.likesCount}|{board.commentsCount}
-          {board.createdAt.split("T")[0]}{" "}
-        </li>
-      ))}
-    </ul>
+    <>
+      <div>
+        {/* 카테고리 바 */}
+        <div className="flex gap-5 p-5"></div>
+        <button>전체</button>
+        <button>커뮤니티</button>
+        <button>Q & A</button>
+      </div>
+      <ul>
+        {boards.map((board) => (
+          <li key={board.id}>
+            {Category[board.category as keyof typeof Category]}
+            {petType[board.petType as keyof typeof petType]}
+            {board.title}
+            {board.content}
+            {board.nickname}
+            {board.viewsCount}|{board.likesCount}|{board.commentsCount}
+            {board.createdAt.split("T")[0]}{" "}
+          </li>
+        ))}
+      </ul>
+    </>
   );
 }
