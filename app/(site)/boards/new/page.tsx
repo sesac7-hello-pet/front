@@ -1,6 +1,7 @@
 "use client";
 
 import api from "@/app/lib/api";
+import { useRouter } from "next/navigation";
 import React, { useRef, useState } from "react";
 
 export default function BoardCreate() {
@@ -9,6 +10,7 @@ export default function BoardCreate() {
   const title = useRef<HTMLInputElement>(null);
   const content = useRef<HTMLTextAreaElement>(null);
   const imgText = useRef<HTMLInputElement>(null);
+  const router = useRouter();
 
   const changeButton = (state: string, current: string) =>
     `w-16 rounded-full text-xs px-2 py-1 font-medium shadow-sm transition border
@@ -65,6 +67,7 @@ export default function BoardCreate() {
     try {
       const res = await api.post("/boards", payload);
       alert("글이 등록되었습니다!!");
+      router.push(`/boards/${res.data.id}`);
     } catch (err) {
       console.error("등록실패", err);
       alert("등록에 실패했습니다. 다시 시도해주세요");
