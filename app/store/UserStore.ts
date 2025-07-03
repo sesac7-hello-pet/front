@@ -19,6 +19,7 @@ export interface UserDetailData {
 
 interface UserState {
   user: User | null;
+
   setUser: (u: User) => void;
   clearUser: () => void;
 }
