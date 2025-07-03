@@ -23,6 +23,7 @@ interface BoardPage {
   boardList: Board[];
 }
 
+//응답
 interface Board {
   id: number;
   nickname: string;
@@ -41,6 +42,9 @@ interface Board {
 export default function BoardListPage() {
   const [boards, setBoards] = useState<Board[]>([]);
   const [loading, setLoading] = useState(true);
+  const [category, setCategory] = useState("전체")
+  const [filter, setFilter] = useState("TOTAL");
+  const [search, setSearch] = useState("")
 
   useEffect(() => {
     getBoard();
@@ -48,7 +52,7 @@ export default function BoardListPage() {
 
   async function getBoard() {
     try {
-      const res = await api.get("/boards");
+      const res = await api.get("/boards", payload);
       setBoards(res.data.boardList); // 배열만 저장
       console.log(res.data);
     } catch (err) {
@@ -57,28 +61,44 @@ export default function BoardListPage() {
       setLoading(false); // 무조건 로딩 종료
     }
   }
+  // 요청
+  const payload = {
+    category: ,
+    searchType: filter,
+    sortType: "CURRENT"
+    keyword: "",
+    page: 0,
+    size: 10
+  };
+
 
   if (loading) return <h1>Loading…</h1>;
 
+  const categories = ["전체", "커뮤니티", "Q & A"];
+
   return (
     <>
-      <div>
         {/* 카테고리 바 */}
-        <div className="flex gap-5 p-5"></div>
-        <button>전체</button>
-        <button>커뮤니티</button>
-        <button>Q & A</button>
+        <div className="flex gap-5 p-5">
+        { categories.map((category) => (
+          <button key={category}
+          onClick = {() => setCategory(category) }>
+            {category}
+          </button>
+        ))}
       </div>
 
       <div className="flex items-center gap-2">
-        <select>
+        <select onChange={searchOption} value={filter}>
           <option>전체</option>
           <option>작성자</option>
           <option>제목</option>
           <option>내용</option>
         </select>
+        <input placeholder="찾으시는 글이 있으신가요?" ></input>
+        <button onClick={}>검색</button>
+        <button>초기화</button>
       </div>
-
       <ul>
         {boards.map((board) => (
           <li key={board.id}>
