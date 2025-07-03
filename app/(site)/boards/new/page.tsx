@@ -6,16 +6,9 @@ import React, { useRef, useState } from "react";
 export default function BoardCreate() {
   const [category, setCategory] = useState<string>("커뮤니티");
   const [petType, setPetType] = useState<string>("강아지");
-  const [delete, setDelete] = useState<boolean>(false);
   const title = useRef<HTMLInputElement>(null);
   const content = useRef<HTMLTextAreaElement>(null);
-
-  //   const changeButton = (state: string, current: string) =>
-  //     `w-40 rounded-lg font-semibold py-2 shadow-sm transition ${
-  //       state == current
-  //         ? "bg-amber-400 text-white"
-  //         : "bg-amber-50 text-amber-300 hover:bg-amber-100"
-  //     }`;
+  const imgText = useRef<HTMLInputElement>(null);
 
   const changeButton = (state: string, current: string) =>
     `w-16 rounded-full text-xs px-2 py-1 font-medium shadow-sm transition border
@@ -33,11 +26,9 @@ export default function BoardCreate() {
     setPetType(selectd);
   }
 
-  function deleteBtn(cliked : boolean) {
-    setDelete(cliked)
-    if (delete){
-
-        return
+  function deleteBtn() {
+    if (imgText.current) {
+      imgText.current.value = "";
     }
   }
 
@@ -66,7 +57,7 @@ export default function BoardCreate() {
     const payload = {
       title: checkTitle,
       content: checkContent,
-      img_url: null,
+      img_url: imgText.current?.value,
       boardCategory: categoryMap[category],
       petType: petTypeMap[petType],
     };
@@ -162,7 +153,8 @@ export default function BoardCreate() {
             <div className="flex items-center gap-3">
               <input
                 type="file"
-                onClick = {}
+                ref={imgText}
+                //onChange={loadImg}
                 className="flex-1 rounded-lg  bg-[#F1F1E8] px-2 py-1 text-sm 
              file:mr-4 file:rounded-full file:border file:border-gray-300
              file:bg-[#F1F5FF] file:px-2 file:py-0.5 file:text-[12px]  file:text-gray-700 
@@ -171,7 +163,7 @@ export default function BoardCreate() {
               <button
                 type="button"
                 className="rounded-full border border-gray-300 bg-[#F1F5FF] px-4 py-1.5 text-sm text-gray-700 transition hover:bg-gray-100"
-                onClick={() => deleteBtn(delete)}
+                onClick={() => deleteBtn()}
               >
                 삭제
               </button>
