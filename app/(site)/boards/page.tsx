@@ -1,7 +1,6 @@
 "use client";
 
 import api from "@/app/lib/api";
-import { BADHINTS } from "dns";
 import { useEffect, useState } from "react";
 
 enum Category {
@@ -70,6 +69,16 @@ export default function BoardListPage() {
         <button>커뮤니티</button>
         <button>Q & A</button>
       </div>
+
+      <div className="flex items-center gap-2">
+        <select>
+          <option>전체</option>
+          <option>작성자</option>
+          <option>제목</option>
+          <option>내용</option>
+        </select>
+      </div>
+
       <ul>
         {boards.map((board) => (
           <li key={board.id}>
