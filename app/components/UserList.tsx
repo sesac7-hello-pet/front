@@ -60,7 +60,7 @@ export default function UserList() {
         userSearchType: searchType,
         userSortType: sortType,
         userAscDesc: orderType,
-        keyword, // ← 확정된 키워드
+        keyword, // ← 확정된 키워
       },
     });
     setUsers(res.data.adminUserList);

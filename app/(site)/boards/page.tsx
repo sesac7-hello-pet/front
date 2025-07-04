@@ -1,19 +1,8 @@
 "use client";
 
 import api from "@/app/lib/api";
+import { get } from "http";
 import { useEffect, useState } from "react";
-
-enum Category {
-  TOTAL = "전체",
-  FREE = "커뮤니티",
-  QNA = "Q & A",
-}
-
-enum petType {
-  DOG = "강아지",
-  CAT = "고양이",
-  ETC = "기타",
-}
 
 interface BoardPage {
   page: number;
@@ -42,17 +31,47 @@ interface Board {
 export default function BoardListPage() {
   const [boards, setBoards] = useState<Board[]>([]);
   const [loading, setLoading] = useState(true);
-  const [category, setCategory] = useState("전체")
-  const [filter, setFilter] = useState("TOTAL");
-  const [search, setSearch] = useState("")
+  const [category, setCategory] = useState<string>("TOTAL");
+  const [option, setOption] = useState<string>("TOTAL");
+  const [keyword, setKeyword] = useState<string>("");
+  const [search, setSearch] = useState<boolean>(false);
+
+  const categories = [
+    { label: "전체", value: "TOTAL" },
+    { label: "커뮤니티", value: "FREE" },
+    { label: "Q & A", value: "QNA" },
+  ];
+
+  const petTypes = [
+    { label: "강아지", value: "DOG" },
+    { label: "고양이", value: "CAT" },
+    { label: "기타", value: "ETC" },
+  ];
+
+  const selectOptions = [
+    { label: "전체", value: "TOTAL" },
+    { label: "작성자", value: "USERNAME" },
+    { label: "제목", value: "TITLE" },
+    { label: "내용", value: "CONTENT" },
+  ];
 
   useEffect(() => {
     getBoard();
-  }, []);
+  }, [category, search]);
 
   async function getBoard() {
+    // 요청
+    const payload = {
+      category: category,
+      searchType: option,
+      sortType: "CURRENT",
+      keyword: keyword,
+      page: 0,
+      size: 10,
+    };
+
     try {
-      const res = await api.get("/boards", payload);
+      const res = await api.get("/boards", { params: payload });
       setBoards(res.data.boardList); // 배열만 저장
       console.log(res.data);
     } catch (err) {
@@ -61,49 +80,76 @@ export default function BoardListPage() {
       setLoading(false); // 무조건 로딩 종료
     }
   }
-  // 요청
-  const payload = {
-    category: ,
-    searchType: filter,
-    sortType: "CURRENT"
-    keyword: "",
-    page: 0,
-    size: 10
-  };
-
-
   if (loading) return <h1>Loading…</h1>;
 
-  const categories = ["전체", "커뮤니티", "Q & A"];
+  function selectCategory(value: string) {
+    resetFilter();
+    setCategory(value);
+  }
+
+  function selectOption(e: React.ChangeEvent<HTMLSelectElement>) {
+    setOption(e.target.value);
+  }
+
+  function InputKeyword(e: React.ChangeEvent<HTMLInputElement>) {
+    setKeyword(e.target.value);
+  }
+
+  function searchKeyword(bool: boolean) {
+    setSearch(bool);
+    getBoard();
+  }
+
+  function resetFilter() {
+    setOption("TOTAL");
+    setKeyword("");
+    setBoards([]);
+    getBoard();
+  }
+
+  function changeResponse<T extends { label: string; value: string }>(
+    list: T[],
+    value: string
+  ) {
+    return list.find((item) => item.value == value)?.label;
+  }
 
   return (
     <>
-        {/* 카테고리 바 */}
-        <div className="flex gap-5 p-5">
-        { categories.map((category) => (
-          <button key={category}
-          onClick = {() => setCategory(category) }>
-            {category}
+      {/* 카테고리 바 */}
+      <div className="flex gap-5 p-5">
+        {categories.map((category) => (
+          <button
+            key={category.value}
+            onClick={() => selectCategory(category.value)}
+          >
+            {category.label}
           </button>
         ))}
       </div>
-
+      {/* 검색 필터링 */}
       <div className="flex items-center gap-2">
-        <select onChange={searchOption} value={filter}>
-          <option>전체</option>
-          <option>작성자</option>
-          <option>제목</option>
-          <option>내용</option>
+        <select onChange={selectOption} value={option}>
+          {selectOptions.map((op) => (
+            <option key={op.value} value={op.value}>
+              {op.label}
+            </option>
+          ))}
         </select>
-        <input placeholder="찾으시는 글이 있으신가요?" ></input>
-        <button onClick={}>검색</button>
-        <button>초기화</button>
+        {/* 검색바 */}
+        <input
+          value={keyword}
+          onChange={InputKeyword}
+          placeholder="찾으시는 글이 있으신가요?"
+        ></input>
+        <button onClick={() => searchKeyword(true)}>검색</button>
+        <button onClick={resetFilter}>초기화</button>
       </div>
       <ul>
         {boards.map((board) => (
           <li key={board.id}>
-            {Category[board.category as keyof typeof Category]}
-            {petType[board.petType as keyof typeof petType]}
+            {changeResponse(categories, board.category)}
+            {changeResponse(petTypes, board.petType)}
             {board.title}
             {board.content}
             {board.nickname}
