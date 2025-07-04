@@ -14,43 +14,23 @@ export default function MyPage() {
   const [myBoard, setMyBoard] = useState(false);
   const [myComment, setMyComment] = useState(false);
 
-  function showMyPage() {
-    setMyPage(true);
-    setRoleChangedBtn(false);
-    setMyBoard(false);
-    setMyComment(false);
-  }
-
-  function showRoleChangedBtn() {
-    setMyPage(false);
-    setRoleChangedBtn(true);
-    setMyBoard(false);
-    setMyComment(false);
-  }
-
-  function showMyBoard() {
-    setMyPage(false);
-    setRoleChangedBtn(false);
-    setMyBoard(true);
-    setMyComment(false);
-  }
-
-  function showMyComment() {
-    setMyPage(false);
-    setRoleChangedBtn(false);
-    setMyBoard(false);
-    setMyComment(true);
-  }
+  /* ---------------- 탭 전환 ---------------- */
+  const toggle = (tab: "page" | "role" | "board" | "comment") => {
+    setMyPage(tab === "page");
+    setRoleChangedBtn(tab === "role");
+    setMyBoard(tab === "board");
+    setMyComment(tab === "comment");
+  };
 
   return (
     <RequireRole allow={["USER", "ADMIN", "SHELTER"]} fallback="/auth/login">
-      <div className="flex flex-col items-center justify-start h-screen bg-gray-50 pt-[5vh]">
+      <div className="flex flex-col items-center bg-gray-50 pt-[5vh] min-h-screen">
+        {/* --- 프로필 --- */}
         <img
           src={user?.profileUrl}
           alt="Profile"
-          className="w-32 h-32 rounded-full object-cover"
+          className="h-32 w-32 rounded-full object-cover shadow"
         />
-
         <div className="mt-6 text-center">
           <p className="text-xl font-semibold text-gray-800">
             {user?.nickname}
@@ -58,12 +38,13 @@ export default function MyPage() {
           <p className="mt-1 text-sm text-gray-500">{user?.email}</p>
         </div>
 
-        <div className="mt-12 flex w-full max-w-[960px] items-start">
-          {/* ── 왼쪽 사이드 버튼 그룹 ── */}
-          <nav className="flex flex-col space-y-5 p-4">
+        {/* --- 본문 영역 --- */}
+        <div className="mt-12 flex w-full max-w-[960px] items-start gap-2 px-2">
+          {/* 사이드 메뉴 */}
+          <nav className="flex flex-col space-y-5">
             <button
-              onClick={showMyPage}
-              className={`w-40 rounded-lg font-semibold py-2 shadow-sm transition ${
+              onClick={() => toggle("page")}
+              className={`w-40 rounded-lg py-2 font-semibold shadow-sm transition ${
                 myPage
                   ? "bg-amber-400 text-white"
                   : "bg-amber-50 text-amber-300 hover:bg-amber-100"
@@ -73,8 +54,8 @@ export default function MyPage() {
             </button>
             {user?.role === "ADMIN" ? (
               <button
-                onClick={showRoleChangedBtn}
-                className={`w-40 rounded-lg font-semibold py-2 shadow-sm transition ${
+                onClick={() => toggle("role")}
+                className={`w-40 rounded-lg py-2 font-semibold shadow-sm transition ${
                   roleChangedBtn
                     ? "bg-amber-400 text-white"
                     : "bg-amber-50 text-amber-300 hover:bg-amber-100"
@@ -84,8 +65,8 @@ export default function MyPage() {
               </button>
             ) : user?.role === "SHELTER" ? (
               <button
-                onClick={showRoleChangedBtn}
-                className={`w-40 rounded-lg font-semibold py-2 shadow-sm transition ${
+                onClick={() => toggle("role")}
+                className={`w-40 rounded-lg py-2 font-semibold shadow-sm transition ${
                   roleChangedBtn
                     ? "bg-amber-400 text-white"
                     : "bg-amber-50 text-amber-300 hover:bg-amber-100"
@@ -95,8 +76,8 @@ export default function MyPage() {
               </button>
             ) : (
               <button
-                onClick={showRoleChangedBtn}
-                className={`w-40 rounded-lg font-semibold py-2 shadow-sm transition ${
+                onClick={() => toggle("role")}
+                className={`w-40 rounded-lg py-2 font-semibold shadow-sm transition ${
                   roleChangedBtn
                     ? "bg-amber-400 text-white"
                     : "bg-amber-50 text-amber-300 hover:bg-amber-100"
@@ -106,8 +87,8 @@ export default function MyPage() {
               </button>
             )}
             <button
-              onClick={showMyBoard}
-              className={`w-40 rounded-lg font-semibold py-2 shadow-sm transition ${
+              onClick={() => toggle("board")}
+              className={`w-40 rounded-lg py-2 font-semibold shadow-sm transition ${
                 myBoard
                   ? "bg-amber-400 text-white"
                   : "bg-amber-50 text-amber-300 hover:bg-amber-100"
@@ -116,8 +97,8 @@ export default function MyPage() {
               내가 쓴 게시글
             </button>
             <button
-              onClick={showMyComment}
-              className={`w-40 rounded-lg font-semibold py-2 shadow-sm transition ${
+              onClick={() => toggle("comment")}
+              className={`w-40 rounded-lg py-2 font-semibold shadow-sm transition ${
                 myComment
                   ? "bg-amber-400 text-white"
                   : "bg-amber-50 text-amber-300 hover:bg-amber-100"
@@ -127,24 +108,20 @@ export default function MyPage() {
             </button>
           </nav>
 
-          {/* ── 오른쪽 보드 영역 ── */}
-          <div className="flex-1 flex justify-center">
-            <div className="w-full max-w-[720px] h-[650px] border border-gray-300 bg-white">
-              {/* 기존 보드 콘텐츠 */}
-              {myPage ? <UserDetail /> : ""}
-              {roleChangedBtn ? (
-                user?.role === "ADMIN" ? (
+          {/* 컨텐츠 패널 */}
+          <div className="flex-1 overflow-x-auto">
+            <div className="flex-none min-w-[720px] rounded-2xl border border-gray-300 bg-white p-8 shadow-md space-y-8">
+              {myPage && <UserDetail />}
+              {roleChangedBtn &&
+                (user?.role === "ADMIN" ? (
                   <UserList />
                 ) : user?.role === "SHELTER" ? (
-                  <div>shelter</div>
+                  <div className="text-center py-10">shelter</div>
                 ) : (
-                  <div>user</div>
-                )
-              ) : (
-                ""
-              )}
-              {myBoard ? <h1>myBoard</h1> : ""}
-              {myComment ? <h1>myComment</h1> : ""}
+                  <div className="text-center py-10">user</div>
+                ))}
+              {myBoard && <h1 className="text-center py-10">myBoard</h1>}
+              {myComment && <h1 className="text-center py-10">myComment</h1>}
             </div>
           </div>
         </div>

@@ -27,20 +27,21 @@ const SORT_TYPES = [
 const ORDER_TYPES = ["ASC", "DESC"] as const;
 
 export default function UserList() {
+  /* ─────────── 상태 ─────────── */
   const [users, setUsers] = useState<User[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
   const router = useRouter();
 
-  /* 검색·정렬 조건 ----------------------- */
+  /* 검색·정렬 조건 */
   const [searchType, setSearchType] =
     useState<(typeof SEARCH_TYPES)[number]>("TOTAL");
   const [sortType, setSortType] = useState<(typeof SORT_TYPES)[number]>("ID");
   const [orderType, setOrderType] =
     useState<(typeof ORDER_TYPES)[number]>("ASC");
 
-  /* 키워드: 입력용 / 확정용 분리 ---------- */
+  /* 키워드: 입력용 / 확정용 분리 */
   const [keywordInput, setKeywordInput] = useState(""); // 입력창에 표시되는 값
   const [keyword, setKeyword] = useState(""); // 실제 쿼리에 쓰는 값
 
@@ -50,6 +51,7 @@ export default function UserList() {
   /* 페이지 또는 검색 조건(확정된 keyword) 바뀔 때만 fetch */
   useEffect(() => {
     fetchUsers(currentPage);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, searchType, sortType, orderType, keyword]);
 
   async function fetchUsers(page: number) {
@@ -111,145 +113,170 @@ export default function UserList() {
     setKeyword("");
     setSearchType("TOTAL");
     setCurrentPage(1);
+    setSortType("ID");
+    setOrderType("ASC");
   }
 
+  /* ─────────── UI ─────────── */
   return (
     <RequireRole allow={["ADMIN"]}>
-      <div className="space-y-6">
-        {/* ----------- 정렬 옵션 ----------- */}
-        <div className="flex items-center justify-between">
-          {/* 왼쪽: 정렬 기준 */}
-          <div className="flex items-center gap-2">
-            <label>정렬 기준:</label>
+      <div className="bg-white px-4 py-6 sm:px-8">
+        <div className="w-full rounded-2xl bg-white p-8 shadow-[0_0_0_4px_rgba(253,224,71,0.25)] space-y-8">
+          {/* ----------- 정렬 옵션 ----------- */}
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            {/* 왼쪽: 정렬 기준 */}
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium text-gray-700">
+                정렬 기준:
+              </label>
+              <select
+                value={sortType}
+                onChange={(e) => {
+                  setSortType(e.target.value as (typeof SORT_TYPES)[number]);
+                  setCurrentPage(1);
+                }}
+                className="rounded-lg border px-3 py-2 text-sm shadow focus:ring-2 focus:ring-amber-400"
+              >
+                {SORT_TYPES.map((t) => (
+                  <option key={t}>{t}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* 오른쪽: 오름/내림 */}
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium text-gray-700">
+                정렬 방향:
+              </label>
+              <select
+                value={orderType}
+                onChange={(e) => {
+                  setOrderType(e.target.value as (typeof ORDER_TYPES)[number]);
+                  setCurrentPage(1);
+                }}
+                className="rounded-lg border px-3 py-2 text-sm shadow focus:ring-2 focus:ring-amber-400"
+              >
+                {ORDER_TYPES.map((o) => (
+                  <option key={o}>{o}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* ----------- 검색 바 ----------- */}
+          <div className="flex flex-wrap items-center gap-3">
             <select
-              value={sortType}
-              onChange={(e) => {
-                setSortType(e.target.value as (typeof SORT_TYPES)[number]);
-                setCurrentPage(1);
-              }}
-              className="border rounded px-2 py-1"
+              value={searchType}
+              onChange={(e) =>
+                setSearchType(e.target.value as (typeof SEARCH_TYPES)[number])
+              }
+              className="rounded-lg border px-3 py-2 text-sm shadow focus:ring-2 focus:ring-amber-400"
             >
-              {SORT_TYPES.map((t) => (
+              {SEARCH_TYPES.map((t) => (
                 <option key={t}>{t}</option>
               ))}
             </select>
-          </div>
 
-          {/* 오른쪽: 오름/내림 */}
-          <div className="flex items-center gap-2">
-            <label>정렬 방향:</label>
-            <select
-              value={orderType}
-              onChange={(e) => {
-                setOrderType(e.target.value as (typeof ORDER_TYPES)[number]);
-                setCurrentPage(1);
-              }}
-              className="border rounded px-2 py-1"
-            >
-              {ORDER_TYPES.map((o) => (
-                <option key={o}>{o}</option>
-              ))}
-            </select>
-          </div>
-        </div>
+            <input
+              value={keywordInput}
+              onChange={(e) => setKeywordInput(e.target.value)}
+              placeholder="검색어"
+              className="flex-1 rounded-lg border px-4 py-2 text-sm shadow placeholder-gray-400 focus:ring-2 focus:ring-amber-400"
+            />
 
-        {/* ----------- 검색 바 ----------- */}
-        <div className="flex items-center gap-3">
-          <select
-            value={searchType}
-            onChange={(e) =>
-              setSearchType(e.target.value as (typeof SEARCH_TYPES)[number])
-            }
-            className="border rounded px-2 py-1"
-          >
-            {SEARCH_TYPES.map((t) => (
-              <option key={t}>{t}</option>
-            ))}
-          </select>
-
-          <input
-            value={keywordInput}
-            onChange={(e) => setKeywordInput(e.target.value)}
-            placeholder="검색어"
-            className="border rounded px-3 py-1 flex-1"
-          />
-
-          <button
-            onClick={handleSearch}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded"
-          >
-            검색
-          </button>
-
-          <button
-            onClick={resetSearch}
-            className="bg-gray-300 hover:bg-gray-400 px-3 py-1 rounded"
-          >
-            초기화
-          </button>
-        </div>
-
-        {/* ----------- 리스트 ----------- */}
-        <ul className="space-y-1">
-          {users.map((u) => (
-            <li key={u.id}>
-              <span>
-                {u.role} / {u.username} / {u.email} / {u.nickname} /
-                {u.phoneNumber}
-              </span>
-              <button
-                onClick={() => handleDeactivate(u.id)}
-                disabled={u.role === "ADMIN" || !u.activation}
-                className={`text-sm font-bold py-1 px-3 rounded transition-colors
-  ${
-    u.role === "ADMIN" || !u.activation
-      ? "bg-gray-400 text-gray-700 cursor-not-allowed"
-      : "bg-red-500 text-white hover:bg-red-700"
-  }
-    `}
-              >
-                ❌
-              </button>
-            </li>
-          ))}
-        </ul>
-
-        {/* ----------- 페이지 네비게이션 ----------- */}
-        <div className="flex items-center justify-center gap-2 mt-4">
-          <button onClick={() => goTo(1)} disabled={currentPage === 1}>
-            {"<<"}
-          </button>
-          <button
-            onClick={() => goTo(currentPage - 1)}
-            disabled={currentPage === 1}
-          >
-            {"<"}
-          </button>
-
-          {pageNumbers.map((p) => (
             <button
-              key={p}
-              onClick={() => goTo(p)}
-              className={p === currentPage ? "font-bold underline" : ""}
+              onClick={handleSearch}
+              className="rounded-lg bg-amber-400 px-4 py-2 text-sm font-semibold text-white shadow transition hover:bg-amber-500"
             >
-              {p}
+              검색
             </button>
-          ))}
 
-          {endPage < totalPages && <span>…</span>}
+            <button
+              onClick={resetSearch}
+              className="rounded-lg bg-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 shadow transition hover:bg-gray-400"
+            >
+              초기화
+            </button>
+          </div>
 
-          <button
-            onClick={() => goTo(currentPage + 1)}
-            disabled={currentPage === totalPages}
-          >
-            {">"}
-          </button>
-          <button
-            onClick={() => goTo(totalPages)}
-            disabled={currentPage === totalPages}
-          >
-            {">>"}
-          </button>
+          {/* ----------- 리스트 ----------- */}
+          <ul className="divide-y divide-gray-200 rounded-lg border">
+            {users.map((u) => (
+              <li
+                key={u.id}
+                className="flex items-center justify-between gap-4 px-4 py-3"
+              >
+                <span className="flex-1 text-sm text-gray-700">
+                  {u.role} / {u.username} / {u.email} / {u.nickname} /{" "}
+                  {u.phoneNumber}
+                </span>
+                <button
+                  onClick={() => handleDeactivate(u.id)}
+                  disabled={u.role === "ADMIN" || !u.activation}
+                  className={`rounded-lg px-3 py-1 text-sm font-bold transition
+                    ${
+                      u.role === "ADMIN" || !u.activation
+                        ? "cursor-not-allowed bg-gray-300 text-gray-500"
+                        : "bg-red-500 text-white hover:bg-red-600"
+                    }
+                  `}
+                >
+                  ❌
+                </button>
+              </li>
+            ))}
+          </ul>
+
+          {/* ----------- 페이지 네비게이션 ----------- */}
+          <div className="flex items-center justify-center gap-2">
+            <button
+              onClick={() => goTo(1)}
+              disabled={currentPage === 1}
+              className="rounded px-2 py-1 text-sm disabled:opacity-50"
+            >
+              {"<<"}
+            </button>
+            <button
+              onClick={() => goTo(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="rounded px-2 py-1 text-sm disabled:opacity-50"
+            >
+              {"<"}
+            </button>
+
+            {pageNumbers.map((p) => (
+              <button
+                key={p}
+                onClick={() => goTo(p)}
+                className={`rounded px-3 py-1 text-sm transition hover:bg-amber-100 ${
+                  p === currentPage
+                    ? "font-bold text-amber-500 underline"
+                    : "text-gray-700"
+                }`}
+              >
+                {p}
+              </button>
+            ))}
+
+            {endPage < totalPages && (
+              <span className="text-sm text-gray-500">…</span>
+            )}
+
+            <button
+              onClick={() => goTo(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="rounded px-2 py-1 text-sm disabled:opacity-50"
+            >
+              {">"}
+            </button>
+            <button
+              onClick={() => goTo(totalPages)}
+              disabled={currentPage === totalPages}
+              className="rounded px-2 py-1 text-sm disabled:opacity-50"
+            >
+              {">>"}
+            </button>
+          </div>
         </div>
       </div>
     </RequireRole>
