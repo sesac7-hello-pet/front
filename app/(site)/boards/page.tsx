@@ -1,7 +1,7 @@
 "use client";
 
 import api from "@/app/lib/api";
-import { get } from "http";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 interface BoardPage {
@@ -36,6 +36,8 @@ export default function BoardListPage() {
   const [keyword, setKeyword] = useState<string>("");
   const [search, setSearch] = useState<boolean>(false);
   const [sort, setSort] = useState<string>("CURRENT");
+
+  const router = useRouter();
 
   const categories = [
     { label: "전체", value: "TOTAL" },
@@ -111,6 +113,9 @@ export default function BoardListPage() {
   function checkSort(value: string) {
     setSort(value);
   }
+  function goCreate() {
+    router.push("/boards/new");
+  }
 
   function resetFilter() {
     setOption("TOTAL");
@@ -171,6 +176,7 @@ export default function BoardListPage() {
             {option.label}
           </label>
         ))}
+        <button onClick={goCreate}>새글쓰기</button>
       </div>
 
       <ul>
