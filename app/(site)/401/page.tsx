@@ -1,19 +1,10 @@
-"use client";
-import { useUserStore } from "@/app/store/UserStore";
 import Link from "next/link";
-import { useEffect } from "react";
 
 export const metadata = {
   title: "401 – Unauthorized",
 };
 
 export default function UnauthorizedPage() {
-  const { clearUser } = useUserStore();
-
-  useEffect(() => {
-    clearUser();
-  }, []);
-
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
       <h1 className="text-4xl font-bold text-red-500">401</h1>
