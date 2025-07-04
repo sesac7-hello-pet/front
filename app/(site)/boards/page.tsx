@@ -35,6 +35,7 @@ export default function BoardListPage() {
   const [option, setOption] = useState<string>("TOTAL");
   const [keyword, setKeyword] = useState<string>("");
   const [search, setSearch] = useState<boolean>(false);
+  const [sort, setSort] = useState<string>("CURRENT");
 
   const categories = [
     { label: "전체", value: "TOTAL" },
@@ -55,16 +56,23 @@ export default function BoardListPage() {
     { label: "내용", value: "CONTENT" },
   ];
 
+  const selectSort = [
+    { label: "최신 순", value: "CURRENT" },
+    { label: "좋아요 순", value: "LIKES" },
+    { label: "댓글 순", value: "COMMENTS" },
+    { label: "조회 순", value: "VIEWS" },
+  ];
+
   useEffect(() => {
     getBoard();
-  }, [category, search]);
+  }, [category, search, sort]);
 
   async function getBoard() {
     // 요청
     const payload = {
       category: category,
       searchType: option,
-      sortType: "CURRENT",
+      sortType: sort,
       keyword: keyword,
       page: 0,
       size: 10,
@@ -98,6 +106,10 @@ export default function BoardListPage() {
   function searchKeyword(bool: boolean) {
     setSearch(bool);
     getBoard();
+  }
+
+  function checkSort(value: string) {
+    setSort(value);
   }
 
   function resetFilter() {
@@ -145,6 +157,22 @@ export default function BoardListPage() {
         <button onClick={() => searchKeyword(true)}>검색</button>
         <button onClick={resetFilter}>초기화</button>
       </div>
+      {/* 정렬 */}
+      <div className="flex items-center gap-2">
+        {selectSort.map((option) => (
+          <label key={option.value}>
+            <input
+              type="radio"
+              key={option.value}
+              value={option.value}
+              checked={sort == option.value}
+              onChange={() => checkSort(option.value)}
+            />
+            {option.label}
+          </label>
+        ))}
+      </div>
+
       <ul>
         {boards.map((board) => (
           <li key={board.id}>
