@@ -1,0 +1,91 @@
+import { FamilyInfo } from "@/types/application";
+
+interface Props {
+    familyInfo: FamilyInfo;
+    setFamilyInfo: (info: FamilyInfo) => void;
+}
+
+export default function FamilySection({ familyInfo, setFamilyInfo }: Props) {
+    const update = (key: keyof FamilyInfo, value: any) => {
+        setFamilyInfo({
+            ...familyInfo,
+            [key]: value,
+        });
+    };
+
+    return (
+        <div className="space-y-20">
+            <h2 className="text-lg font-semibold text-center mb-8">가족 구성</h2>
+
+            {/* 가족 수 */}
+            <div className="space-y-3">
+                <p className="font-medium text-sm">현재 함께 거주하는 가족은 몇 명인가요?</p>
+                <input
+                    type="number"
+                    min={0}
+                    value={familyInfo.numberOfHousehold}
+                    onChange={(e) => update("numberOfHousehold", Number(e.target.value))}
+                    placeholder="예: 1"
+                    className="w-15 rounded-md p-2 text-sm placeholder-gray-400 focus:ring-2 focus:ring-amber-400 bg-[rgba(197,197,197,0.2)]"
+                />{" "}
+                명
+            </div>
+
+            {/* 13세 미만 아동 */}
+            <div className="space-y-3">
+                <p className="font-medium text-sm">
+                    현재 함께 거주하는 가족 중 13세 미만 아동이 있나요?
+                </p>
+                {["있음", "없음"].map((label) => (
+                    <label key={label} className="flex items-center gap-2 text-sm">
+                        <input
+                            type="radio"
+                            name="hasChildUnder13"
+                            checked={familyInfo.hasChildUnder13 === (label === "있음")}
+                            onChange={() => update("hasChildUnder13", label === "있음")}
+                            className="accent-amber-400"
+                        />
+                        {label}
+                    </label>
+                ))}
+            </div>
+
+            {/* 입양 동의 여부 */}
+            <div className="space-y-3">
+                <p className="font-medium text-sm">가족 모두 반려동물 입양에 동의하나요?</p>
+                {["모두 동의", "일부 반대"].map((label) => (
+                    <label key={label} className="flex items-center gap-2 text-sm">
+                        <input
+                            type="radio"
+                            name="familyAgreement"
+                            checked={familyInfo.familyAgreement === label}
+                            onChange={() => update("familyAgreement", label)}
+                            className="accent-amber-400"
+                        />
+                        {label}
+                    </label>
+                ))}
+            </div>
+
+            {/* 알레르기 여부 */}
+            <div className="space-y-3">
+                <p className="font-medium text-sm">
+                    가족 중 반려동물 관련 알레르기가 있는 사람이 있나요?
+                </p>
+                {["있음", "없음"].map((label) => (
+                    <label key={label} className="flex items-center gap-2 text-sm">
+                        <input
+                            type="radio"
+                            name="hasPetAllergy"
+                            checked={familyInfo.hasPetAllergy === (label === "있음")}
+                            onChange={() => update("hasPetAllergy", label === "있음")}
+                            className="accent-amber-400"
+                        />
+                        {label}
+                    </label>
+                ))}
+            </div>
+            <hr className="border-gray-300 mt-4" />
+        </div>
+    );
+}
