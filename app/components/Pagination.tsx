@@ -23,7 +23,7 @@ export default function Pagination({
   );
 
   const startPage = (currentBlock - 1) * blockSize + 1;
-  const endPage = Math.min(startPage + currentBlock - 1, totalPages);
+  const endPage = Math.min(startPage + blockSize - 1, totalPages);
   const totalBlocks = Math.ceil(totalPages / blockSize);
 
   const createPageUrl = (page: number) => {
@@ -65,16 +65,15 @@ export default function Pagination({
           </button>
         );
       })}
-      ;
       <button
         onClick={() => goToBlock(currentBlock + 1)}
-        disabled={totalBlocks == 1}
+        disabled={currentBlock == totalBlocks}
       >
         &gt;
       </button>
       <button
         onClick={() => goToBlock(totalBlocks)}
-        disabled={totalBlocks == 1}
+        disabled={currentBlock == totalBlocks}
       >
         »
       </button>
