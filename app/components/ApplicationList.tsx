@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import api from "@/app/lib/api";
-import ApplicationItem from "@/components/ApplicationItem";
-import DeleteConfirmModal from "@/components/DeleteConfirmModal";
+import ApplicationItem from "@/app/components/ApplicationItem";
+import DeleteConfirmModal from "@/app/components/DeleteConfirmModal";
 
 interface Application {
     applicationId: number;
