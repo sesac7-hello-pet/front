@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 interface Props {
     application: {
         applicationId: number;
@@ -11,6 +13,8 @@ interface Props {
 }
 
 export default function AnnouncementApplicationItem({ application, onApprove }: Props) {
+    const router = useRouter();
+
     return (
         <div className="flex justify-between items-center border-b border-gray-300 py-2">
             <div className="flex-1 flex space-x-20 text-base">
@@ -20,9 +24,7 @@ export default function AnnouncementApplicationItem({ application, onApprove }: 
             </div>
             <div className="flex space-x-3">
                 <button
-                    onClick={() => {
-                        window.location.href = `/applications/${application.applicationId}`;
-                    }}
+                    onClick={() => router.push(`/applications/${application.applicationId}`)}
                     className="bg-amber-400 text-white text-sm px-3 py-1 rounded-xl hover:bg-amber-500"
                 >
                     신청서
