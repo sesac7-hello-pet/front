@@ -1,5 +1,14 @@
+import { Metadata } from "next";
 import Bottom from "../components/Bottom";
 import Navigator from "../components/Navigator";
+
+export const metadata: Metadata = {
+  title: {
+    default: "Hello Pet",
+    template: "%s | wesome Site",
+  },
+  description: "동물 관련 사이트",
+};
 
 export default function SiteLayout({
   children,
