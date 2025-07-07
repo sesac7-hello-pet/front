@@ -1,5 +1,6 @@
 import Pagination from "@/app/components/Pagination";
 import BoardListClient from "./BoardListClient";
+import Head from "next/head";
 
 interface Board {
   id: number;
@@ -54,13 +55,15 @@ function getQureyParam(
 export default async function BoardListPage({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const category = getQureyParam(searchParams, "category", "TOTAL");
-  const searchType = getQureyParam(searchParams, "searchType", "TOTAL");
-  const keyword = getQureyParam(searchParams, "keyword", "");
-  const sortType = getQureyParam(searchParams, "sortType", "CURRENT");
-  const pageStr = getQureyParam(searchParams, "page", "1");
+  const params = await searchParams;
+
+  const category = getQureyParam(params, "category", "TOTAL");
+  const searchType = getQureyParam(params, "searchType", "TOTAL");
+  const keyword = getQureyParam(params, "keyword", "");
+  const sortType = getQureyParam(params, "sortType", "CURRENT");
+  const pageStr = getQureyParam(params, "page", "1");
   const page = parseInt(pageStr);
 
   const res = await fetch(
@@ -69,6 +72,7 @@ export default async function BoardListPage({
     }&size=10`,
     { cache: "no-store" }
   );
+
   const data: BoardPageResponse = await res.json();
   const filters: Filters = {
     category,
@@ -80,6 +84,10 @@ export default async function BoardListPage({
 
   return (
     <>
+      <Head>
+        <title>Hello Pet</title>
+        <meta name="description" content="자유게시판" />
+      </Head>
       <BoardListClient
         boards={data.boardList}
         currentPage={data.page + 1}

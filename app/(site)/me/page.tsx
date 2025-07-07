@@ -4,6 +4,7 @@ import RequireRole from "@/app/components/RequireRole";
 import UserDetail from "@/app/components/UserDetail";
 import UserList from "@/app/components/UserList";
 import { useUserStore } from "@/app/store/UserStore";
+import Head from "next/head";
 import { useState } from "react";
 
 export default function MyPage() {
@@ -25,6 +26,10 @@ export default function MyPage() {
   return (
     <RequireRole allow={["USER", "ADMIN", "SHELTER"]} fallback="/auth/login">
       <div className="flex flex-col items-center bg-gray-50 pt-[5vh] min-h-screen">
+        <Head>
+          <title>Hello Pet</title>
+          <meta name="description" content="마이 페이지" />
+        </Head>
         {/* --- 프로필 --- */}
         <img
           src={user?.profileUrl}
