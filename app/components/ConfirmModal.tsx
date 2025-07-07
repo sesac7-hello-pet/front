@@ -7,7 +7,7 @@ interface Props {
 export default function ConfirmModal({ message, onConfirm, onCancel }: Props) {
     return (
         <div className="fixed inset-0 bg-black/30 flex justify-center items-center">
-            <div className="bg-white rounded p-8 space-y-4 shadow-lg">
+            <div className="bg-white rounded-xl p-8 space-y-4 shadow-lg">
                 <p className="text-center text-lg mb-8">{message}</p>
                 <div className="flex justify-center space-x-8">
                     <button
