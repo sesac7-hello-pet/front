@@ -2,21 +2,14 @@
 import Pagination from "@/app/components/Pagination";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-
-interface Board {
-  id: number;
-  nickname: string;
-  title: string;
-  content: string;
-  image_url: string;
-  likesCount: number;
-  viewsCount: number;
-  commentsCount: number;
-  createdAt: string;
-  updatedAt: string;
-  category: string;
-  petType: string;
-}
+import { Board } from "@/app/lib/boardTypes";
+import { changeResponse } from "@/app/lib/boardUtils";
+import {
+  categories,
+  petTypes,
+  selectOptions,
+  selectSort,
+} from "@/app/lib/boardConstants";
 
 interface Props {
   boards: Board[];
@@ -48,32 +41,6 @@ export default function BoardListPage({
     router.push(`?${params.toString()}`);
   };
 
-  const categories = [
-    { label: "전체", value: "TOTAL" },
-    { label: "커뮤니티", value: "FREE" },
-    { label: "Q & A", value: "QNA" },
-  ];
-
-  const petTypes = [
-    { label: "강아지", value: "DOG" },
-    { label: "고양이", value: "CAT" },
-    { label: "기타", value: "ETC" },
-  ];
-
-  const selectOptions = [
-    { label: "전체", value: "TOTAL" },
-    { label: "작성자", value: "USERNAME" },
-    { label: "제목", value: "TITLE" },
-    { label: "내용", value: "CONTENT" },
-  ];
-
-  const selectSort = [
-    { label: "최신 순", value: "CURRENT" },
-    { label: "좋아요 순", value: "LIKES" },
-    { label: "댓글 순", value: "COMMENTS" },
-    { label: "조회 순", value: "VIEWS" },
-  ];
-
   function goCreate() {
     router.push("/boards/new");
   }
@@ -96,13 +63,6 @@ export default function BoardListPage({
     setKeyword("");
     setSearchType("TOTAL");
     router.push(`?${params.toString()}`);
-  }
-
-  function changeResponse<T extends { label: string; value: string }>(
-    list: T[],
-    value: string
-  ) {
-    return list.find((item) => item.value === value)?.label;
   }
 
   return (
