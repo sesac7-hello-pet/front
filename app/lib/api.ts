@@ -11,6 +11,10 @@ const api = axios.create({
   timeout: 5000,
 });
 
+export const serverApi = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_BASE_URL,
+});
+
 let isRefreshing = false;
 let queue: {
   resolve: (value: AxiosResponse) => void;
