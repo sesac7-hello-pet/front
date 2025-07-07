@@ -88,13 +88,17 @@ export default function FamilySection({ familyInfo, setFamilyInfo, isReadOnly = 
                     {/* 입양 동의 여부 */}
                     <div className="space-y-3">
                         <p className="font-medium text-sm">가족 모두 반려동물 입양에 동의하나요?</p>
-                        {["모두 동의", "일부 반대"].map((label) => (
-                            <label key={label} className="flex items-center gap-2 text-sm">
+                        {[
+                            { code: "ALL_AGREE", label: "모두 동의" },
+                            { code: "SOME_DISAGREE", label: "일부 반대" },
+                        ].map(({ code, label }) => (
+                            <label key={code} className="flex items-center gap-2 text-sm">
                                 <input
                                     type="radio"
                                     name="familyAgreement"
-                                    checked={familyInfo.familyAgreement === label}
-                                    onChange={() => update("familyAgreement", label)}
+                                    value={code}
+                                    checked={familyInfo.familyAgreement === code}
+                                    onChange={() => update("familyAgreement", code)}
                                     className="accent-amber-400"
                                 />
                                 {label}

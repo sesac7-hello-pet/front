@@ -87,7 +87,7 @@ export default function ApplicationForm() {
         try {
             await api.post("/applications", payload);
             alert("입양 신청이 완료되었습니다.");
-            router.push(`/announcements/${announcementId}`);
+            router.push(`/`);
         } catch (error: any) {
             alert("신청에 실패했습니다: " + (error.response?.data?.message || error.message));
         }
