@@ -5,7 +5,7 @@ import RequireRole from "@/app/components/RequireRole";
 import api from "@/app/lib/api";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 
 /* ── 역할 매핑 ─────────────────────────────────────────────── */
 const ROLE_LABELS = ["유저", "보호소", "관리자"] as const;

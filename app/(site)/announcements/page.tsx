@@ -21,7 +21,7 @@ export default function AnnouncementsPage() {
   async function getAnnouncement() {
     try {
       const res = await api.get("/announcements");
-      setAnnouncements(res.data);
+      setAnnouncements(res.data.announcements);
       console.log(res.data);
     } catch (err) {
       console.error(err);

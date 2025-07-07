@@ -28,10 +28,11 @@ export default function Navigator() {
 
   /* ── 로그아웃 ── */
   const logout = async () => {
+    clearUser();
+    setOpen(false);
     try {
       await api.delete("/auth/logout");
-      clearUser();
-      setOpen(false);
+
       router.push("/");
       alert("로그아웃 되었습니다.");
     } catch (err) {
