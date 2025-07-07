@@ -1,6 +1,6 @@
 "use client";
 
-import ApplicationList from "@/app/components/ApplicationList";
+import ApplicationList from "@/app/components/application/ApplicationList";
 import RequireRole from "@/app/components/RequireRole";
 import UserDetail from "@/app/components/UserDetail";
 import UserList from "@/app/components/UserList";
@@ -37,7 +37,6 @@ export default function MyPage() {
                     <p className="text-xl font-semibold text-gray-800">{user?.nickname}</p>
                     <p className="mt-1 text-sm text-gray-500">{user?.email}</p>
                 </div>
-
 
                 {/* --- 본문 영역 --- */}
                 <div className="mt-12 flex w-full max-w-[960px] items-start gap-2 px-2">

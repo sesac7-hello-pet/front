@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import api from "@/app/lib/api";
-import ApplicationItem from "@/app/components/ApplicationItem";
+import ApplicationItem from "@/app/components/application/ApplicationItem";
 import ConfirmModal from "@/app/components/ConfirmModal";
 
 interface Application {
