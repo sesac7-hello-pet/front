@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import api from "@/app/lib/api";
 import ApplicationItem from "@/components/ApplicationItem";
+import DeleteConfirmModal from "@/components/DeleteConfirmModal";
 
 interface Application {
     applicationId: number;
@@ -16,6 +17,7 @@ export default function ApplicationList() {
     const [applications, setApplications] = useState<Application[]>([]);
     const [page, setPage] = useState(0);
     const [totalPages, setTotalPages] = useState(1);
+    const [selectedId, setSelectedId] = useState<number | null>(null);
 
     useEffect(() => {
         fetchApplications(page);
@@ -31,10 +33,26 @@ export default function ApplicationList() {
         }
     };
 
+    const handleDelete = async () => {
+        if (selectedId === null) return;
+        try {
+            await api.delete(`/applications/${selectedId}`);
+            alert("신청서가 삭제되었습니다.");
+            setSelectedId(null);
+            fetchApplications(page); // 최신 데이터로 갱신
+        } catch (e) {
+            alert("신청서 삭제에 실패했습니다.");
+        }
+    };
+
     return (
         <div className="space-y-4">
             {applications.map((app) => (
-                <ApplicationItem key={app.applicationId} application={app} onClick={() => {}} />
+                <ApplicationItem
+                    key={app.applicationId}
+                    application={app}
+                    onClick={() => setSelectedId(app.applicationId)}
+                />
             ))}
 
             {totalPages > 1 && (
@@ -55,6 +73,10 @@ export default function ApplicationList() {
                         </button>
                     ))}
                 </div>
+            )}
+
+            {selectedId !== null && (
+                <DeleteConfirmModal onConfirm={handleDelete} onCancel={() => setSelectedId(null)} />
             )}
         </div>
     );
