@@ -39,7 +39,7 @@ export default function ApplicationDetailPage() {
         try {
             await api.put(`/announcements/${data.announcementId}/applications/${applicationId}`);
             alert("신청이 승인되었습니다.");
-            router.push(`/announcements/${data.announcementId}`);
+            router.push(`/`);
         } catch (e: any) {
             alert("승인에 실패했습니다: " + (e.response?.data?.message || e.message));
         }
