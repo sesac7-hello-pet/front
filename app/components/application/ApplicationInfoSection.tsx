@@ -1,13 +1,13 @@
 import { useParams } from "next/navigation";
 
 interface Props {
-    id?: number | string; // 상세 조회 데이터의 공고 번호
-    name?: string; // 신청자 이름
-    phoneNumber?: string; // 신청자 연락처
-    email?: string; // 신청자 이메일
-    reason: string; // 신청 사유
-    isReadOnly?: boolean; // 읽기 전용 여부
-    setReason?: (value: string) => void; // 작성 모드일 때만 필요
+    id?: number | string;
+    name?: string;
+    phoneNumber?: string;
+    email?: string;
+    reason: string;
+    isReadOnly?: boolean;
+    setReason?: (value: string) => void;
 }
 
 export default function ApplicationInfoSection({
@@ -33,7 +33,7 @@ export default function ApplicationInfoSection({
                     <div className="text-gray-600 font-medium">신청자 이메일</div>
                 </div>
 
-                <div className="space-y-4 ml-6">
+                <div className="space-y-4 ml-10">
                     <div className="text-gray-800">{displayId}</div>
                     <div className="text-gray-800">입양</div>
                     <div className="text-gray-800">{name || "-"}</div>

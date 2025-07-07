@@ -9,16 +9,12 @@ export const metadata: Metadata = {
   description: "동물 관련 사이트",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <html lang="ko">
-      <body className="flex flex-col min-h-screen">
-        <main className="flex-grow">{children}</main>
-      </body>
-    </html>
-  );
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+    return (
+        <html lang="ko">
+            <body className="flex flex-col min-h-screen">
+                <main className="flex-grow">{children}</main>
+            </body>
+        </html>
+    );
 }

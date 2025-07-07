@@ -30,11 +30,11 @@ export default function HousingSection({ housingInfo, setHousingInfo, isReadOnly
 
             {isReadOnly ? (
                 <>
-                    {renderField("현재 주택 형태", housingInfo.housingType)}
-                    {renderField("주택 거주 형태", housingInfo.residenceType)}
+                    {renderField("현재 주택 형태", housingInfo.housingTypeLabel)}
+                    {renderField("주택 거주 형태", housingInfo.residenceTypeLabel)}
                     {renderField("반려동물 허용 여부", housingInfo.petAllowed ? "허용" : "불허")}
-                    {renderField("반려동물 생활 장소", housingInfo.petLivingPlace)}
-                    {renderField("주택 면적", housingInfo.houseSizeRange)}
+                    {renderField("반려동물 생활 장소", housingInfo.petLivingPlaceLabel)}
+                    {renderField("주택 면적", housingInfo.houseSizeRangeLabel)}
                 </>
             ) : (
                 <>
@@ -44,20 +44,20 @@ export default function HousingSection({ housingInfo, setHousingInfo, isReadOnly
                             현재 거주 중인 주택 형태는 무엇인가요?
                         </p>
                         {[
-                            "아파트",
-                            "빌라/연립",
-                            "오피스텔",
-                            "단독주택",
-                            "기숙사/쉐어하우스",
-                            "이동식 주택 (컨테이너, 캠핑카 등)",
-                        ].map((label) => (
-                            <label key={label} className="flex items-center gap-2 text-sm">
+                            { code: "APARTMENT", label: "아파트" },
+                            { code: "VILLA", label: "빌라/연립" },
+                            { code: "OFFICETEL", label: "오피스텔" },
+                            { code: "DETACHED_HOUSE", label: "단독주택" },
+                            { code: "DORMITORY", label: "기숙사/쉐어하우스" },
+                            { code: "MOBILE_HOME", label: "이동식 주택 (컨테이너, 캠핑카 등)" },
+                        ].map(({ code, label }) => (
+                            <label key={code} className="flex items-center gap-2 text-sm">
                                 <input
                                     type="radio"
                                     name="housingType"
-                                    value={label}
-                                    checked={housingInfo.housingType === label}
-                                    onChange={() => update("housingType", label)}
+                                    value={code}
+                                    checked={housingInfo.housingType === code}
+                                    onChange={() => update("housingType", code)}
                                     className="accent-amber-400"
                                 />
                                 {label}
@@ -68,21 +68,24 @@ export default function HousingSection({ housingInfo, setHousingInfo, isReadOnly
                     {/* 거주 형태 */}
                     <div className="space-y-3">
                         <p className="font-medium text-sm">현재 주택의 거주 형태는 무엇인가요?</p>
-                        {["자가", "전세", "월세", "임시 거주 (단기 거주, 숙박시설 포함)"].map(
-                            (label) => (
-                                <label key={label} className="flex items-center gap-2 text-sm">
-                                    <input
-                                        type="radio"
-                                        name="residenceType"
-                                        value={label}
-                                        checked={housingInfo.residenceType === label}
-                                        onChange={() => update("residenceType", label)}
-                                        className="accent-amber-400"
-                                    />
-                                    {label}
-                                </label>
-                            )
-                        )}
+                        {[
+                            { code: "OWNED", label: "자가" },
+                            { code: "JEONSE", label: "전세" },
+                            { code: "MONTHLY_RENT", label: "월세" },
+                            { code: "TEMPORARY", label: "임시 거주" },
+                        ].map(({ code, label }) => (
+                            <label key={code} className="flex items-center gap-2 text-sm">
+                                <input
+                                    type="radio"
+                                    name="residenceType"
+                                    value={code}
+                                    checked={housingInfo.residenceType === code}
+                                    onChange={() => update("residenceType", code)}
+                                    className="accent-amber-400"
+                                />
+                                {label}
+                            </label>
+                        ))}
                     </div>
 
                     {/* 반려동물 허용 여부 */}
@@ -117,14 +120,18 @@ export default function HousingSection({ housingInfo, setHousingInfo, isReadOnly
                         <p className="font-medium text-sm">
                             입양 후 반려동물은 어디에서 생활하나요?
                         </p>
-                        {["실내", "실외", "실내 + 실외"].map((label) => (
-                            <label key={label} className="flex items-center gap-2 text-sm">
+                        {[
+                            { code: "INDOOR", label: "실내" },
+                            { code: "OUTDOOR", label: "실외" },
+                            { code: "BOTH", label: "실내 + 실외" },
+                        ].map(({ code, label }) => (
+                            <label key={code} className="flex items-center gap-2 text-sm">
                                 <input
                                     type="radio"
                                     name="petLivingPlace"
-                                    value={label}
-                                    checked={housingInfo.petLivingPlace === label}
-                                    onChange={() => update("petLivingPlace", label)}
+                                    value={code}
+                                    checked={housingInfo.petLivingPlace === code}
+                                    onChange={() => update("petLivingPlace", code)}
                                     className="accent-amber-400"
                                 />
                                 {label}
@@ -138,18 +145,24 @@ export default function HousingSection({ housingInfo, setHousingInfo, isReadOnly
                             현재 거주 중인 주택의 면적은 얼마인가요?
                         </p>
                         {[
-                            "33㎡ 미만 (10평 미만)",
-                            "33㎡ 이상 ~ 66㎡ 미만 (10평 이상 ~ 20평 미만)",
-                            "66㎡ 이상 ~ 99㎡ 미만 (20평 이상 ~ 30평 미만)",
-                            "99㎡ 이상 (30평 이상)",
-                        ].map((label) => (
-                            <label key={label} className="flex items-center gap-2 text-sm">
+                            { code: "LESS_THAN_33", label: "33㎡ 미만 (10평 미만)" },
+                            {
+                                code: "FROM_33_TO_66",
+                                label: "33㎡ 이상 ~ 66㎡ 미만 (10평 이상 ~ 20평 미만)",
+                            },
+                            {
+                                code: "FROM_66_TO_99",
+                                label: "66㎡ 이상 ~ 99㎡ 미만 (20평 이상 ~ 30평 미만)",
+                            },
+                            { code: "OVER_99", label: "99㎡ 이상 (30평 이상)" },
+                        ].map(({ code, label }) => (
+                            <label key={code} className="flex items-center gap-2 text-sm">
                                 <input
                                     type="radio"
                                     name="houseSizeRange"
-                                    value={label}
-                                    checked={housingInfo.houseSizeRange === label}
-                                    onChange={() => update("houseSizeRange", label)}
+                                    value={code}
+                                    checked={housingInfo.houseSizeRange === code}
+                                    onChange={() => update("houseSizeRange", code)}
                                     className="accent-amber-400"
                                 />
                                 {label}
