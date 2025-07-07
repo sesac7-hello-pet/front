@@ -5,7 +5,6 @@ import RequireRole from "@/app/components/RequireRole";
 import UserDetail from "@/app/components/UserDetail";
 import UserList from "@/app/components/UserList";
 import { useUserStore } from "@/app/store/UserStore";
-import Head from "next/head";
 import { useState } from "react";
 
 export default function MyPage() {
