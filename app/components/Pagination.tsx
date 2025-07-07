@@ -165,7 +165,7 @@ export default function Pagination({
             disabled={isCurrent}
             className={`px-3 py-1 text-sm transition ${
               isCurrent
-                ? "rounded-full bg-yellow-400 text-white cursor-not-allowed"
+                ? "rounded-full bg-[#F5C044]  text-white cursor-not-allowed"
                 : "text-yellow-700 hover:text-yellow-900"
             }`}
           >

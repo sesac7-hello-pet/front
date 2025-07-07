@@ -509,9 +509,8 @@ export default function BoardListPage({
       </div>
 
       <hr className="border-t border-gray-400" />
-
       {/* 검색 필터 영역 */}
-      <div className="flex items-center justify-center gap-6 px-5 py-10 w-full max-w-none">
+      <div className="flex items-center justify-start gap-6 px-5 py-10 w-full max-w-4xl mx-auto">
         <select
           value={searchType}
           onChange={(e) => setSearchType(e.target.value)}
@@ -532,14 +531,14 @@ export default function BoardListPage({
         />
         <button
           onClick={handleSearch}
-          className="bg-[#FFF5C4] hover:bg-[#F5C044] text-gray-700 rounded-xl px-3 py-2 text-sm border border-[#F5C044]"
+          className="bg-[#FFF5C4] hover:bg-[#F5C044] text-gray-700 rounded-xl px-3 py-2 text-sm border border-[#F5C044] whitespace-nowrap"
         >
           검색
         </button>
 
         <button
           onClick={resetFilter}
-          className="bg-[#FFF5C4] hover:bg-[#F5C044] text-gray-700 rounded-xl px-3 py-2 text-sm border border-[#F5C044]"
+          className="bg-[#FFF5C4] hover:bg-[#F5C044] text-gray-700 rounded-xl px-3 py-2 text-sm border border-[#F5C044] whitespace-nowrap"
         >
           초기화
         </button>
@@ -565,7 +564,7 @@ export default function BoardListPage({
 
         <button
           onClick={goCreate}
-          className="ml-auto bg-[#F3AD61] hover:bg-[#C57F34] text-black rounded-xl px-5 py-3 text-sm border border-black"
+          className="ml-auto bg-[#F3AD61] hover:bg-[#C57F34] text-black rounded-xl px-4 py-3 text-sm border border-black"
         >
           새글쓰기🐾
         </button>
