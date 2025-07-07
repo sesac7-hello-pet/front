@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import api from "@/app/lib/api";
 import ApplicationItem from "@/app/components/ApplicationItem";
-import DeleteConfirmModal from "@/app/components/DeleteConfirmModal";
+import ConfirmModal from "@/app/components/ConfirmModal";
 
 interface Application {
     applicationId: number;
@@ -76,7 +76,11 @@ export default function ApplicationList() {
             )}
 
             {selectedId !== null && (
-                <DeleteConfirmModal onConfirm={handleDelete} onCancel={() => setSelectedId(null)} />
+                <ConfirmModal
+                    message="신청서를 삭제하시겠습니까?"
+                    onConfirm={handleDelete}
+                    onCancel={() => setSelectedId(null)}
+                />
             )}
         </div>
     );
