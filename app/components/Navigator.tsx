@@ -32,7 +32,6 @@ export default function Navigator() {
     setOpen(false);
     try {
       await api.delete("/auth/logout");
-
       router.push("/");
       alert("로그아웃 되었습니다.");
     } catch (err) {
