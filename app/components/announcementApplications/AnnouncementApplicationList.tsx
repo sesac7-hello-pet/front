@@ -38,7 +38,7 @@ export default function AnnouncementApplicationList({ announcementId }: Props) {
             setApplications(res.data.applications);
             setTotalPages(res.data.totalPages);
             setAnnouncementCreatedAt(res.data.announcementCreatedAt);
-        } catch (e) {
+        } catch {
             alert("신청 내역을 불러오지 못했습니다.");
         }
     };
@@ -58,16 +58,18 @@ export default function AnnouncementApplicationList({ announcementId }: Props) {
 
     return (
         <div className="space-y-4">
-            <div className="text-gray-700 text-sm">
-                <span>공고 번호: {announcementId}</span>{" "}
+            {/* 상단 공고 정보 */}
+            <div className="flex justify-between items-center border-b pb-2 text-lg">
+                <span className="font-semibold text-gray-700">공고 번호</span>
+                <span>{announcementId}</span>
                 <span>
-                    생성일:{" "}
                     {announcementCreatedAt
                         ? new Date(announcementCreatedAt).toLocaleDateString()
                         : "-"}
                 </span>
             </div>
 
+            {/* 신청자 리스트 */}
             {applications.map((app) => (
                 <AnnouncementApplicationItem
                     key={app.applicationId}
@@ -76,6 +78,7 @@ export default function AnnouncementApplicationList({ announcementId }: Props) {
                 />
             ))}
 
+            {/* 페이지네이션 */}
             {totalPages > 1 && (
                 <div className="flex justify-center space-x-2 mt-4">
                     {[...Array(totalPages)].map((_, idx) => (
@@ -94,6 +97,7 @@ export default function AnnouncementApplicationList({ announcementId }: Props) {
                 </div>
             )}
 
+            {/* 승인 모달 */}
             {selectedAppId !== null && (
                 <ConfirmModal
                     message="해당 신청서를 승인하시겠습니까?"
