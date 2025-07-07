@@ -29,8 +29,8 @@ export default function CareSection({ careInfo, setCareInfo, isReadOnly = false 
 
             {isReadOnly ? (
                 <>
-                    {renderField("하루 평균 집 비우는 시간", careInfo.absenceTime)}
-                    {renderField("하루 평균 돌봄 시간", careInfo.careTime)}
+                    {renderField("하루 평균 집 비우는 시간", careInfo.absenceTimeLabel || "-")}
+                    {renderField("하루 평균 돌봄 시간", careInfo.careTimeLabel || "-")}
                 </>
             ) : (
                 <>
@@ -39,14 +39,19 @@ export default function CareSection({ careInfo, setCareInfo, isReadOnly = false 
                         <p className="font-medium text-sm">
                             평일 기준 하루 평균 집을 비우는 시간은 얼마나 되나요?
                         </p>
-                        {["1 ~ 3시간", "4 ~ 6시간", "7 ~ 9시간", "10시간 이상"].map((label) => (
-                            <label key={label} className="flex items-center gap-2 text-sm">
+                        {[
+                            { code: "ONE_TO_THREE", label: "1~3시간" },
+                            { code: "FOUR_TO_SIX", label: "4~6시간" },
+                            { code: "SEVEN_TO_NINE", label: "7~9시간" },
+                            { code: "TEN_OR_MORE", label: "10시간 이상" },
+                        ].map(({ code, label }) => (
+                            <label key={code} className="flex items-center gap-2 text-sm">
                                 <input
                                     type="radio"
                                     name="absenceTime"
-                                    value={label}
-                                    checked={careInfo.absenceTime === label}
-                                    onChange={() => update("absenceTime", label)}
+                                    value={code}
+                                    checked={careInfo.absenceTime === code}
+                                    onChange={() => update("absenceTime", code)}
                                     className="accent-amber-400"
                                 />
                                 {label}
@@ -59,14 +64,18 @@ export default function CareSection({ careInfo, setCareInfo, isReadOnly = false 
                         <p className="font-medium text-sm">
                             평일 기준 하루 평균 반려동물과 함께할 수 있는 시간은 얼마나 되나요?
                         </p>
-                        {["1시간 이하", "2 ~ 3시간", "4시간 이상"].map((label) => (
-                            <label key={label} className="flex items-center gap-2 text-sm">
+                        {[
+                            { code: "ONE_OR_LESS", label: "1시간 이하" },
+                            { code: "TWO_TO_THREE", label: "2~3시간" },
+                            { code: "FOUR_OR_MORE", label: "4시간 이상" },
+                        ].map(({ code, label }) => (
+                            <label key={code} className="flex items-center gap-2 text-sm">
                                 <input
                                     type="radio"
                                     name="careTime"
-                                    value={label}
-                                    checked={careInfo.careTime === label}
-                                    onChange={() => update("careTime", label)}
+                                    value={code}
+                                    checked={careInfo.careTime === code}
+                                    onChange={() => update("careTime", code)}
                                     className="accent-amber-400"
                                 />
                                 {label}

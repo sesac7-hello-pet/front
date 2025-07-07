@@ -39,9 +39,12 @@ export default function FuturePlanSection({
                                 : "-"}
                         </p>
                         {futurePlanInfo.hasFuturePlan && (
-                            <p className="text-sm text-gray-800 mt-2">
-                                {futurePlanInfo.planDetails || "-"}
-                            </p>
+                            <textarea
+                                value={futurePlanInfo.planDetails || "-"}
+                                readOnly
+                                className="w-full rounded-md p-2 text-sm bg-[rgba(197,197,197,0.2)]"
+                                rows={2}
+                            />
                         )}
                     </>
                 ) : (

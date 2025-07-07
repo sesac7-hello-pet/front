@@ -8,7 +8,7 @@ interface ErrorResponse {
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
   withCredentials: true, // ← 새 accessToken 쿠키를 자동으로 싣도록 유지
-  timeout: 1000,
+  timeout: 5000,
 });
 
 let isRefreshing = false;

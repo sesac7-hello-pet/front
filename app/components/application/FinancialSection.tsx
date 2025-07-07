@@ -30,21 +30,23 @@ export default function FinancialSection({
                     매월 반려동물 양육을 위해 지출 가능한 예상 금액은 얼마인가요?
                 </p>
                 {isReadOnly ? (
-                    <p className="text-sm text-gray-800">{financialInfo.monthlyBudget || "-"}</p>
+                    <p className="text-sm text-gray-800">
+                        {financialInfo.monthlyBudgetLabel || "-"}
+                    </p>
                 ) : (
                     [
-                        "5만 원 이하",
-                        "5만 원 이상 ~ 10만 원 이하",
-                        "10만 원 이상 ~ 20만 원 이하",
-                        "20만 원 이상",
-                    ].map((label) => (
-                        <label key={label} className="flex items-center gap-2 text-sm">
+                        { code: "UNDER_50K", label: "5만 원 이하" },
+                        { code: "FROM_50K_TO_100K", label: "5만 원 이상 ~ 10만 원 이하" },
+                        { code: "FROM_100K_TO_200K", label: "10만 원 이상 ~ 20만 원 이하" },
+                        { code: "OVER_200K", label: "20만 원 이상" },
+                    ].map(({ code, label }) => (
+                        <label key={code} className="flex items-center gap-2 text-sm">
                             <input
                                 type="radio"
                                 name="monthlyBudget"
-                                value={label}
-                                checked={financialInfo.monthlyBudget === label}
-                                onChange={() => update("monthlyBudget", label)}
+                                value={code}
+                                checked={financialInfo.monthlyBudget === code}
+                                onChange={() => update("monthlyBudget", code)}
                                 className="accent-amber-400"
                             />
                             {label}

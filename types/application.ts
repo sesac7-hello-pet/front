@@ -1,25 +1,33 @@
 export interface HousingInfo {
     housingType: string;
+    housingTypeLabel: string;
     residenceType: string;
+    residenceTypeLabel: string;
     petAllowed: boolean | null;
     petLivingPlace: string;
+    petLivingPlaceLabel: string;
     houseSizeRange: string;
+    houseSizeRangeLabel: string;
 }
 
 export interface FamilyInfo {
     numberOfHousehold: number;
     hasChildUnder13: boolean | null;
     familyAgreement: string;
+    familyAgreementLabel: string;
     hasPetAllergy: boolean | null;
 }
 
 export interface CareInfo {
     absenceTime: string;
+    absenceTimeLabel: string;
     careTime: string;
+    careTimeLabel: string;
 }
 
 export interface FinancialInfo {
     monthlyBudget: string;
+    monthlyBudgetLabel: string;
     hasEmergencyFund: boolean | null;
 }
 
