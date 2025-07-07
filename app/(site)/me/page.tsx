@@ -9,36 +9,34 @@ import Head from "next/head";
 import { useState } from "react";
 
 export default function MyPage() {
-  const user = useUserStore((s) => s.user);
+    const user = useUserStore((s) => s.user);
 
-  const [myPage, setMyPage] = useState(true);
-  const [roleChangedBtn, setRoleChangedBtn] = useState(false);
-  const [myBoard, setMyBoard] = useState(false);
-  const [myComment, setMyComment] = useState(false);
+    const [myPage, setMyPage] = useState(true);
+    const [roleChangedBtn, setRoleChangedBtn] = useState(false);
+    const [myBoard, setMyBoard] = useState(false);
+    const [myComment, setMyComment] = useState(false);
 
-  /* ---------------- 탭 전환 ---------------- */
-  const toggle = (tab: "page" | "role" | "board" | "comment") => {
-    setMyPage(tab === "page");
-    setRoleChangedBtn(tab === "role");
-    setMyBoard(tab === "board");
-    setMyComment(tab === "comment");
-  };
+    /* ---------------- 탭 전환 ---------------- */
+    const toggle = (tab: "page" | "role" | "board" | "comment") => {
+        setMyPage(tab === "page");
+        setRoleChangedBtn(tab === "role");
+        setMyBoard(tab === "board");
+        setMyComment(tab === "comment");
+    };
 
-  return (
-    <RequireRole allow={["USER", "ADMIN", "SHELTER"]} fallback="/auth/login">
-      <div className="flex flex-col items-center bg-gray-50 pt-[5vh] min-h-screen">
-        {/* --- 프로필 --- */}
-        <img
-          src={user?.profileUrl}
-          alt="Profile"
-          className="h-32 w-32 rounded-full object-cover shadow"
-        />
-        <div className="mt-6 text-center">
-          <p className="text-xl font-semibold text-gray-800">
-            {user?.nickname}
-          </p>
-          <p className="mt-1 text-sm text-gray-500">{user?.email}</p>
-        </div>
+    return (
+        <RequireRole allow={["USER", "ADMIN", "SHELTER"]} fallback="/auth/login">
+            <div className="flex flex-col items-center bg-gray-50 pt-[5vh] min-h-screen">
+                {/* --- 프로필 --- */}
+                <img
+                    src={user?.profileUrl}
+                    alt="Profile"
+                    className="h-32 w-32 rounded-full object-cover shadow"
+                />
+                <div className="mt-6 text-center">
+                    <p className="text-xl font-semibold text-gray-800">{user?.nickname}</p>
+                    <p className="mt-1 text-sm text-gray-500">{user?.email}</p>
+                </div>
 
                 {/* --- 본문 영역 --- */}
                 <div className="mt-12 flex w-full max-w-[960px] items-start gap-2 px-2">
@@ -127,11 +125,7 @@ export default function MyPage() {
                         </div>
                     </div>
                 </div>
-
             </div>
-          </div>
-        </div>
-      </div>
-    </RequireRole>
-  );
+        </RequireRole>
+    );
 }
