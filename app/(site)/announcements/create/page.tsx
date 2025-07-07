@@ -1,119 +1,148 @@
-// 공고 등록 페이지
-export default function Page() {
-  return (
-    <div className="min-h-screen bg-blue-50 flex flex-col items-center py-10">
-      {/* 상단 네비게이션 */}
-      <nav className="w-full bg-yellow-100 py-3 px-10 flex justify-between items-center text-yellow-600 font-semibold">
-        <span className="text-lg">HELLO PET 🐱</span>
-        <div className="space-x-6">
-          <a href="#">입양게시판</a>
-          <a href="#">자유게시판</a>
-          <a href="#">마이페이지</a>
-          <a href="#">로그아웃</a>
-        </div>
-      </nav>
+"use client";
 
-      {/* 등록 폼 */}
+import { useState } from "react";
+import { useRouter } from "next/navigation"; // 여기 추가
+import api from "@/app/lib/api";
+
+export default function Page() {
+  const router = useRouter(); // router 선언
+
+  const [breed, setBreed] = useState("");
+  const [animalType, setAnimalType] = useState("");
+  const [gender, setGender] = useState("");
+  const [healthStatus, setHealthStatus] = useState("");
+  const [personality, setPersonality] = useState("");
+  const [age, setAge] = useState("");
+  const [image, setImage] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
+
+  const onSubmit = async () => {
+    try {
+      const data = {
+        breed,
+        animalType,
+        gender,
+        health: healthStatus,
+        personality,
+        age: Number(age),
+        image: image || null,
+        selectedDate,
+      };
+
+      console.log("전송 데이터:", data);
+
+      const res = await api.post("/announcements", data);
+      console.log("등록이 되었습니다:", res.data);
+
+      router.push("/announcements"); // router.push 호출 가능!
+
+      alert("등록 성공!");
+    } catch (err) {
+      console.error("등록 실패", err);
+      alert("등록 실패: " + (err instanceof Error ? err.message : "에러 발생"));
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-yellow-30 flex flex-col items-center py-10">
       <div className="bg-yellow-50 w-full max-w-2xl mt-10 p-10 rounded-xl shadow-md text-yellow-700 font-medium">
-        <h2 className="text-center text-xl mb-8">등록 등록 페이지</h2>
+        <h2 className="text-center text-xl mb-8 font-bold">입양 동물 등록</h2>
 
         {/* 동물 종류 */}
         <div className="mb-4">
-          <label className="block mb-1">동물</label>
-          <div className="space-x-4">
-            <label>
-              <input type="checkbox" className="mr-1" defaultChecked /> 강아지
-            </label>
-            <label>
-              <input type="checkbox" className="mr-1" /> 고양이
-            </label>
-            <label>
-              <input type="checkbox" className="mr-1" /> 기타
-            </label>
-          </div>
+          <label className="block mb-1">동물 종류</label>
+          <select
+            className="w-full border-b border-yellow-300 bg-transparent outline-none py-2"
+            value={animalType}
+            onChange={(e) => setAnimalType(e.target.value)}
+          >
+            <option value="">선택하세요</option>
+            <option value="강아지">강아지</option>
+            <option value="고양이">고양이</option>
+            <option value="기타">기타</option>
+          </select>
         </div>
 
-        {/* 종류 */}
+        {/* 견종 */}
         <div className="mb-4">
           <input
             type="text"
-            placeholder="종류를 입력해주세요."
+            placeholder="견종, 묘종을 입력해주세요."
             className="w-full border-b border-yellow-300 bg-transparent outline-none py-2"
+            value={breed}
+            onChange={(e) => setBreed(e.target.value)}
           />
         </div>
 
         {/* 성별 */}
         <div className="mb-4">
           <label className="block mb-1">성별</label>
-          <div className="flex items-center space-x-6">
-            <label>
-              <input type="radio" name="gender" className="mr-1" /> 남
-            </label>
-            <label>
-              <input type="radio" name="gender" className="mr-1" /> 여
-            </label>
-            <button className="ml-auto flex items-center text-yellow-700 hover:underline">
-              <span className="mr-1">사진첨부하기</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M15 10l4.553-2.276a1 1 0 00-.553-1.894H5a1 1 0 00-.553 1.894L9 10m6 0v6a2 2 0 01-2 2H7a2 2 0 01-2-2v-6m6 0V4"
+          <div className="flex space-x-6">
+            {["남", "여"].map((g) => (
+              <label key={g}>
+                <input
+                  type="radio"
+                  name="gender"
+                  value={g}
+                  checked={gender === g}
+                  onChange={(e) => setGender(e.target.value)}
+                  className="mr-1"
                 />
-              </svg>
-            </button>
+                {g}
+              </label>
+            ))}
           </div>
         </div>
 
-        {/* 상태 입력들 */}
-        <div className="space-y-4">
-          <input
-            type="text"
-            placeholder="건강상태를 입력해주세요."
-            className="w-full border-b border-yellow-300 bg-transparent outline-none py-2"
-          />
-          <input
-            type="text"
-            placeholder="성격을 입력해주세요."
-            className="w-full border-b border-yellow-300 bg-transparent outline-none py-2"
-          />
-          <input
-            type="text"
-            placeholder="나이를 입력해주세요."
-            className="w-full border-b border-yellow-300 bg-transparent outline-none py-2"
-          />
-          <input
-            type="text"
-            placeholder="보호 중인 보호소와 연락처를 입력해주세요."
-            className="w-full border-b border-yellow-300 bg-transparent outline-none py-2"
-          />
-          <input
-            type="text"
-            placeholder="발견장소를 입력해주세요."
-            className="w-full border-b border-yellow-300 bg-transparent outline-none py-2"
-          />
-        </div>
+        {/* 건강 상태, 성격, 나이 */}
+        <input
+          type="text"
+          placeholder="건강상태"
+          value={healthStatus}
+          onChange={(e) => setHealthStatus(e.target.value)}
+          className="w-full mb-2 border-b border-yellow-300 py-2 bg-transparent outline-none"
+        />
+        <input
+          type="text"
+          placeholder="성격"
+          value={personality}
+          onChange={(e) => setPersonality(e.target.value)}
+          className="w-full mb-2 border-b border-yellow-300 py-2 bg-transparent outline-none"
+        />
+        <input
+          type="number"
+          placeholder="나이"
+          value={age}
+          onChange={(e) => setAge(e.target.value)}
+          className="w-full mb-4 border-b border-yellow-300 py-2 bg-transparent outline-none"
+        />
 
-        {/* 공고기간 */}
-        <div className="mt-4 mb-6">
-          <label className="block mb-1">공고기간을 선택해주세요.</label>
+        {/* 공고 종료일 */}
+        <div className="mb-6">
+          <label className="block mb-1">공고 종료일</label>
           <input
-            type="date"
+            type="datetime-local"
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
             className="border border-yellow-300 rounded px-2 py-1 bg-white"
-            defaultValue="2025-06-27"
           />
         </div>
 
-        {/* 버튼 */}
+        {/* 이미지 URL */}
+        <input
+          type="text"
+          placeholder="이미지 URL 입력 (선택)"
+          value={image}
+          onChange={(e) => setImage(e.target.value)}
+          className="w-full mb-6 border-b border-yellow-300 py-2 bg-transparent outline-none"
+        />
+
+        {/* 등록 버튼 */}
         <div className="text-center">
-          <button className="bg-yellow-400 text-white px-6 py-2 rounded-full shadow hover:bg-yellow-500 transition">
+          <button
+            className="bg-yellow-400 text-white px-6 py-2 rounded-full shadow hover:bg-yellow-500 transition"
+            onClick={onSubmit}
+          >
             등록하기
           </button>
         </div>
