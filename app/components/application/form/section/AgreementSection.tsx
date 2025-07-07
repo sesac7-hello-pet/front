@@ -1,4 +1,4 @@
-import { Agreement } from "@/types/application";
+import { Agreement } from "@/app/types/application";
 
 interface Props {
     agreement: Agreement;
@@ -6,7 +6,6 @@ interface Props {
     isReadOnly?: boolean;
 }
 
-// ✅ 체크박스 항목 정의 (컴포넌트 밖)
 const CHECKBOXES: { key: keyof Agreement; label: string }[] = [
     { key: "agreedToAccuracy", label: "위 항목은 사실에 근거하여 작성하였습니다." },
     { key: "agreedToCare", label: "입양 후 반려동물을 책임감 있게 돌볼 것을 약속합니다." },
