@@ -46,7 +46,7 @@ export default function ApplicationList() {
     };
 
     return (
-        <div className="space-y-4">
+        <div>
             {applications.map((app) => (
                 <ApplicationItem
                     key={app.applicationId}
