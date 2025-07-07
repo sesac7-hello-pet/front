@@ -1,4 +1,4 @@
-import { CareInfo } from "@/types/application";
+import { CareInfo } from "@/app/types/application";
 
 interface Props {
     careInfo: CareInfo;

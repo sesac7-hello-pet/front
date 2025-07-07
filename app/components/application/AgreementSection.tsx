@@ -1,4 +1,4 @@
-import { Agreement } from "@/types/application";
+import { Agreement } from "@/app/types/application";
 
 interface Props {
     agreement: Agreement;

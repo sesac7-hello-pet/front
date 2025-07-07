@@ -1,4 +1,4 @@
-import { FamilyInfo } from "@/types/application";
+import { FamilyInfo } from "@/app/types/application";
 
 interface Props {
     familyInfo: FamilyInfo;

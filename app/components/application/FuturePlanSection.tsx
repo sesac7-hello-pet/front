@@ -1,4 +1,4 @@
-import { FuturePlanInfo } from "@/types/application";
+import { FuturePlanInfo } from "@/app/types/application";
 
 interface Props {
     futurePlanInfo: FuturePlanInfo;

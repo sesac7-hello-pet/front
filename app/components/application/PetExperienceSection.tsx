@@ -1,4 +1,4 @@
-import { PetExperienceInfo } from "@/types/application";
+import { PetExperienceInfo } from "@/app/types/application";
 
 interface Props {
     petExperienceInfo: PetExperienceInfo;

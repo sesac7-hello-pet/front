@@ -1,4 +1,4 @@
-import { HousingInfo } from "@/types/application";
+import { HousingInfo } from "@/app/types/application";
 
 interface Props {
     housingInfo: HousingInfo;

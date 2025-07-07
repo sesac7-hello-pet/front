@@ -1,4 +1,4 @@
-import { FinancialInfo } from "@/types/application";
+import { FinancialInfo } from "@/app/types/application";
 
 interface Props {
     financialInfo: FinancialInfo;
