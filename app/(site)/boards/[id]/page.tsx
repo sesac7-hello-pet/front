@@ -19,8 +19,6 @@ export default function BoardDetail() {
   const [liked, setLiked] = useState(true);
   const [loading, setLoading] = useState(false);
   const [value, setValue] = useState("");
-  //   const [isEdit, setIsEdit] = useState(false);
-  //   const [revise, setRevise] = useState("");
 
   const [editCommentId, setEditCommentId] = useState<number | null>(null);
   const [editContent, setEditContent] = useState<string>("");
