@@ -11,16 +11,16 @@ import {
     initialPetExperienceInfo,
     initialFuturePlanInfo,
     initialAgreement,
-} from "@/app/lib/initialStates";
+} from "@/app/components/application/form/initialStates";
 import { ApplicationPayload } from "@/app/types/application";
-import AgreementSection from "./AgreementSection";
-import ApplicationInfoSection from "./ApplicationInfoSection";
-import HousingSection from "./HousingSection";
-import FamilySection from "./FamilySection";
-import CareSection from "./CareSection";
-import FinancialSection from "./FinancialSection";
-import PetExperienceSection from "./PetExperienceSection";
-import FuturePlanSection from "./FuturePlanSection";
+import AgreementSection from "./section/AgreementSection";
+import ApplicationInfoSection from "./section/ApplicationInfoSection";
+import HousingSection from "./section/HousingSection";
+import FamilySection from "./section/FamilySection";
+import CareSection from "./section/CareSection";
+import FinancialSection from "./section/FinancialSection";
+import PetExperienceSection from "./section/PetExperienceSection";
+import FuturePlanSection from "./section/FuturePlanSection";
 
 export default function ApplicationForm() {
     const router = useRouter();

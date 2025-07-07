@@ -4,14 +4,14 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import api from "@/app/lib/api";
 import RequireRole from "@/app/components/RequireRole";
-import AgreementSection from "@/app/components/application/AgreementSection";
-import ApplicationInfoSection from "@/app/components/application/ApplicationInfoSection";
-import HousingSection from "@/app/components/application/HousingSection";
-import FamilySection from "@/app/components/application/FamilySection";
-import CareSection from "@/app/components/application/CareSection";
-import FinancialSection from "@/app/components/application/FinancialSection";
-import PetExperienceSection from "@/app/components/application/PetExperienceSection";
-import FuturePlanSection from "@/app/components/application/FuturePlanSection";
+import AgreementSection from "@/app/components/application/form/section/AgreementSection";
+import ApplicationInfoSection from "@/app/components/application/form/section/ApplicationInfoSection";
+import HousingSection from "@/app/components/application/form/section/HousingSection";
+import FamilySection from "@/app/components/application/form/section/FamilySection";
+import CareSection from "@/app/components/application/form/section/CareSection";
+import FinancialSection from "@/app/components/application/form/section/FinancialSection";
+import PetExperienceSection from "@/app/components/application/form/section/PetExperienceSection";
+import FuturePlanSection from "@/app/components/application/form/section/FuturePlanSection";
 
 export default function ApplicationDetailPage() {
     const params = useParams();
