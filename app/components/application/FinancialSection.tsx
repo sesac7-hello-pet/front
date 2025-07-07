@@ -30,7 +30,9 @@ export default function FinancialSection({
                     매월 반려동물 양육을 위해 지출 가능한 예상 금액은 얼마인가요?
                 </p>
                 {isReadOnly ? (
-                    <p className="text-sm text-gray-800">{financialInfo.monthlyBudget || "-"}</p>
+                    <p className="text-sm text-gray-800">
+                        {financialInfo.monthlyBudgetLabel || "-"}
+                    </p>
                 ) : (
                     [
                         "5만 원 이하",

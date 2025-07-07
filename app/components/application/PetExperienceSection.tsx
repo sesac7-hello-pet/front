@@ -54,9 +54,12 @@ export default function PetExperienceSection({
 
                 {/* 경험 상세 내용 */}
                 {isReadOnly && petExperienceInfo.hasPetExperience ? (
-                    <p className="text-sm text-gray-800 mt-2">
-                        {petExperienceInfo.experienceDetails || "-"}
-                    </p>
+                    <textarea
+                        value={petExperienceInfo.experienceDetails || "-"}
+                        readOnly
+                        className="w-full rounded-md p-2 text-sm bg-[rgba(197,197,197,0.2)]"
+                        rows={2}
+                    />
                 ) : (
                     petExperienceInfo.hasPetExperience && (
                         <textarea

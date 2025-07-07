@@ -29,8 +29,8 @@ export default function CareSection({ careInfo, setCareInfo, isReadOnly = false 
 
             {isReadOnly ? (
                 <>
-                    {renderField("하루 평균 집 비우는 시간", careInfo.absenceTime)}
-                    {renderField("하루 평균 돌봄 시간", careInfo.careTime)}
+                    {renderField("하루 평균 집 비우는 시간", careInfo.absenceTimeLabel || "-")}
+                    {renderField("하루 평균 돌봄 시간", careInfo.careTimeLabel || "-")}
                 </>
             ) : (
                 <>

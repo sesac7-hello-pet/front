@@ -30,11 +30,11 @@ export default function HousingSection({ housingInfo, setHousingInfo, isReadOnly
 
             {isReadOnly ? (
                 <>
-                    {renderField("현재 주택 형태", housingInfo.housingType)}
-                    {renderField("주택 거주 형태", housingInfo.residenceType)}
+                    {renderField("현재 주택 형태", housingInfo.housingTypeLabel)}
+                    {renderField("주택 거주 형태", housingInfo.residenceTypeLabel)}
                     {renderField("반려동물 허용 여부", housingInfo.petAllowed ? "허용" : "불허")}
-                    {renderField("반려동물 생활 장소", housingInfo.petLivingPlace)}
-                    {renderField("주택 면적", housingInfo.houseSizeRange)}
+                    {renderField("반려동물 생활 장소", housingInfo.petLivingPlaceLabel)}
+                    {renderField("주택 면적", housingInfo.houseSizeRangeLabel)}
                 </>
             ) : (
                 <>

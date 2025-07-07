@@ -33,7 +33,7 @@ export default function ApplicationInfoSection({
                     <div className="text-gray-600 font-medium">신청자 이메일</div>
                 </div>
 
-                <div className="space-y-4 ml-6">
+                <div className="space-y-4 ml-10">
                     <div className="text-gray-800">{displayId}</div>
                     <div className="text-gray-800">입양</div>
                     <div className="text-gray-800">{name || "-"}</div>

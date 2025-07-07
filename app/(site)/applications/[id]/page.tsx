@@ -51,7 +51,7 @@ export default function ApplicationDetailPage() {
     return (
         <div className="max-w-2xl mx-auto p-6 bg-[#FFFDF0] shadow rounded-xl space-y-6 my-10">
             <h1 className="text-xl font-bold text-center">입양 신청서 상세</h1>
-            <p className="text-sm text-gray-500 text-center">
+            <p className="text-sm text-gray-500 text-center mb-10">
                 제출일: {new Date(data.submittedAt).toLocaleString()}
             </p>
 

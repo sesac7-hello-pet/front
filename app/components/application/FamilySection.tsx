@@ -38,7 +38,7 @@ export default function FamilySection({ familyInfo, setFamilyInfo, isReadOnly = 
                             ? "없음"
                             : "-"
                     )}
-                    {renderField("입양 동의 여부", familyInfo.familyAgreement || "-")}
+                    {renderField("입양 동의 여부", familyInfo.familyAgreementLabel || "-")}
                     {renderField(
                         "알레르기 여부",
                         familyInfo.hasPetAllergy === true
