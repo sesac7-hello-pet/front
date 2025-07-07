@@ -10,6 +10,7 @@ import {
   selectOptions,
   selectSort,
 } from "@/app/lib/boardConstants";
+import Link from "next/link";
 
 interface Props {
   boards: Board[];
@@ -156,7 +157,8 @@ export default function BoardListPage({
       ) : (
         <ul className="px-7 max-w-5xl mx-auto divide-y divide-gray-300">
           {boards.map((board) => (
-            <li
+            <Link
+              href={`boards/${board.id}`}
               key={board.id}
               className="flex justify-between items-start py-4"
             >
@@ -199,7 +201,7 @@ export default function BoardListPage({
                   className="w-24 h-24 object-cover rounded-xl"
                 />
               )}
-            </li>
+            </Link>
           ))}
         </ul>
       )}
