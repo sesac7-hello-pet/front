@@ -21,6 +21,7 @@ export interface BoardResponse {
 
 export interface Comment {
   id: number;
+  email: string;
   nickname: string;
   content: string;
   createdAt: string;

@@ -17,6 +17,12 @@ export default function BoardDetail() {
   const [likecounts, setLikecounts] = useState<number>(0);
   const [liked, setLiked] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [value, setValue] = useState("");
+  //   const [isEdit, setIsEdit] = useState(false);
+  //   const [revise, setRevise] = useState("");
+
+  const [editCommentId, setEditCommentId] = useState<number | null>(null);
+  const [editContent, setEditContent] = useState<string>("");
 
   useEffect(() => {
     getBoardDetail();
@@ -35,7 +41,12 @@ export default function BoardDetail() {
       const res = await api.get(`/boards/${id}`);
       console.log("res data", res.data);
       setBoard(res.data.boardResponse ?? null);
-      setComments(res.data.commentList ?? []);
+      // 여기서 댓글을 createdAt 기준으로 정렬해서 setComments
+      const sortedComments = (res.data.commentList ?? []).sort(
+        (a, b) =>
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      );
+      setComments(sortedComments);
       console.log("comment", res.data.commentList);
     } catch (err) {
       console.error(err);
@@ -56,6 +67,60 @@ export default function BoardDetail() {
     } catch (err) {
       console.error("좋아요 실패", err);
       setLikecounts((prev) => prev + (!newLiked ? +1 : -1));
+    }
+  }
+
+  async function handleComment(value: string) {
+    setValue(value);
+    try {
+      await api.post(`/boards/${id}/comments`, { content: value });
+      setValue("");
+      getBoardDetail();
+    } catch (err) {
+      console.error("댓글이 정상적으로 등록되지 않았습니다.", err);
+    }
+  }
+
+  async function boardUpdate() {
+    try {
+      router.push(`/boards/${id}`);
+      //await api.put(`/boards/${id}`);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  async function boardDelete() {
+    const confirmed = window.confirm("게시글을 삭제하시겠습니까?");
+    if (!confirmed) return;
+    try {
+      await api.delete(`/boards/${id}`);
+      router.push("/boards");
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function commentUpdate(commentId: number) {
+    try {
+      await api.put(`/boards/${id}/comments/${commentId}`, {
+        content: editContent,
+      });
+      setEditCommentId(null);
+      setEditContent("");
+      getBoardDetail();
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function commentDelete(commentId: number) {
+    const confirmed = window.confirm("댓글을 삭제하시겠습니까?");
+    if (!confirmed) return;
+    try {
+      await api.delete(`/boards/${id}/comments/${commentId}`);
+      getBoardDetail();
+    } catch (err) {
+      console.log(err);
     }
   }
 
@@ -85,15 +150,73 @@ export default function BoardDetail() {
       </div>
       {board?.email === user?.email && (
         <div>
-          <button>수정</button>
-          <button>삭제</button>
+          <button onClick={boardUpdate}>수정</button>
+          <button onClick={boardDelete}>삭제</button>
         </div>
       )}
-      <div>댓글 수</div>
       <div>
-        {comments.length > 0
-          ? comments.map((com) => com.content)
-          : "댓글이 없습니다."}
+        <input
+          value={value}
+          placeholder="댓글을 입력해주세요."
+          onChange={(e) => setValue(e.target.value)}
+        />
+        <button onClick={() => handleComment(value)}>등록</button>
+        <div>{comments.length}</div>
+        <div>
+          {comments.length > 0 ? (
+            comments.map((com, index) => (
+              <div key={index}>
+                <div>닉네임 : {com.nickname}</div>
+                {editCommentId == com.id ? (
+                  <>
+                    <input
+                      value={editContent}
+                      onChange={(e) => setEditContent(e.target.value)}
+                    ></input>
+                    <button onClick={() => commentUpdate(com.id)}>저장</button>
+                    <button
+                      onClick={() => {
+                        setEditCommentId(null);
+                        setEditContent("");
+                      }}
+                    >
+                      취소
+                    </button>
+                  </>
+                ) : (
+                  <div>댓글 : {com.content}</div>
+                )}
+
+                <div>{com.createdAt.split("T")[0]}</div>
+                {com.updatedAt && <div>수정됨</div>}
+
+                {com?.email === user?.email && editCommentId !== com.id && (
+                  <div>
+                    <button
+                      onClick={() => {
+                        setEditCommentId(com.id);
+                        setEditContent(com.content);
+                      }}
+                    >
+                      수정
+                    </button>
+                    <button onClick={() => commentDelete(com.id)}>삭제</button>
+                  </div>
+                )}
+              </div>
+            ))
+          ) : (
+            <div>댓글이 없습니다.</div>
+          )}
+        </div>
+        {/* 페이지네이션 */}
+        <div className="mt-4 mb-12 px-5 max-w-4xl mx-auto">
+          {/* <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            blockSize={5}
+          /> */}
+        </div>
       </div>
     </>
   );
