@@ -1,12 +1,13 @@
 "use client";
 
 import api from "@/app/lib/api";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BoardResponse, Comment } from "@/app/lib/boardTypes";
 import { categories, petTypes } from "@/app/lib/boardConstants";
 import { changeResponse } from "@/app/lib/boardUtils";
 import { useUserStore } from "@/app/store/UserStore";
+import Pagination from "@/app/components/Pagination";
 
 export default function BoardDetail() {
   const router = useRouter();
@@ -24,6 +25,24 @@ export default function BoardDetail() {
   const [editCommentId, setEditCommentId] = useState<number | null>(null);
   const [editContent, setEditContent] = useState<string>("");
 
+  //////////////
+  const searchParams = useSearchParams();
+  const pageStr = searchParams.get("page") ?? "1";
+  const currentPage = parseInt(pageStr, 10);
+
+  // 한 페이지에 보여줄 댓글 수
+  const commentsPerPage = 5;
+
+  // 총 페이지 수 계산
+  const totalPages = Math.ceil(comments.length / commentsPerPage);
+
+  // 현재 페이지에 보여줄 댓글들만 추출
+  const pagedComments = comments.slice(
+    (currentPage - 1) * commentsPerPage,
+    currentPage * commentsPerPage
+  );
+
+  ///////
   useEffect(() => {
     getBoardDetail();
   }, [id]);
@@ -163,9 +182,9 @@ export default function BoardDetail() {
         <button onClick={() => handleComment(value)}>등록</button>
         <div>{comments.length}</div>
         <div>
-          {comments.length > 0 ? (
-            comments.map((com, index) => (
-              <div key={index}>
+          {pagedComments.length > 0 ? (
+            pagedComments.map((com, index) => (
+              <div key={com.id ?? index}>
                 <div>닉네임 : {com.nickname}</div>
                 {editCommentId == com.id ? (
                   <>
@@ -211,11 +230,11 @@ export default function BoardDetail() {
         </div>
         {/* 페이지네이션 */}
         <div className="mt-4 mb-12 px-5 max-w-4xl mx-auto">
-          {/* <Pagination
+          <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
             blockSize={5}
-          /> */}
+          />
         </div>
       </div>
     </>
