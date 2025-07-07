@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import api from "@/app/lib/api";
 import AnnouncementApplicationItem from "./AnnouncementApplicationItem";
-import ConfirmModal from "@/components/ConfirmModal";
+import ConfirmModal from "@/app/components/ConfirmModal";
 
 interface Props {
     announcementId: number;
@@ -23,6 +24,8 @@ export default function AnnouncementApplicationList({ announcementId }: Props) {
     const [announcementCreatedAt, setAnnouncementCreatedAt] = useState<string>("");
     const [selectedAppId, setSelectedAppId] = useState<number | null>(null);
 
+    const router = useRouter();
+
     useEffect(() => {
         fetchApplications(page);
     }, [page]);
@@ -37,6 +40,19 @@ export default function AnnouncementApplicationList({ announcementId }: Props) {
             setAnnouncementCreatedAt(res.data.announcementCreatedAt);
         } catch (e) {
             alert("신청 내역을 불러오지 못했습니다.");
+        }
+    };
+
+    const handleApprove = async () => {
+        if (selectedAppId === null) return;
+        try {
+            await api.put(`/announcements/${announcementId}/applications/${selectedAppId}`);
+            alert("신청이 승인되었습니다.");
+            router.push(`/`);
+        } catch (e: any) {
+            alert("승인에 실패했습니다: " + (e.response?.data?.message || e.message));
+        } finally {
+            setSelectedAppId(null);
         }
     };
 
@@ -78,13 +94,10 @@ export default function AnnouncementApplicationList({ announcementId }: Props) {
                 </div>
             )}
 
-            {/* 승인 모달은 다음 단계에서 handleApprove와 연결 */}
             {selectedAppId !== null && (
                 <ConfirmModal
                     message="해당 신청서를 승인하시겠습니까?"
-                    onConfirm={() => {
-                        /* 승인 로직 다음 단계 */
-                    }}
+                    onConfirm={handleApprove}
                     onCancel={() => setSelectedAppId(null)}
                 />
             )}
