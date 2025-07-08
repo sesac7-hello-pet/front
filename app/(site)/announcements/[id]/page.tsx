@@ -5,6 +5,7 @@ interface AnnouncementDetailResponse {
   id: number;
   breed: string;
   announcementStatus: string;
+  animalType: string;
   shelterName: string;
   createdAt: string;
   imageUrl: string;
@@ -20,14 +21,17 @@ const animalstatus: Record<"IN_PROGRESS" | "COMPLETED", string> = {
   COMPLETED: "입양완료",
 };
 
-const baseUrl = process.env.API_BASE_URL ?? "http://localhost:2222/api/v1"; // ✅ 포트 확인도!
+const baseUrl = process.env.API_BASE_URL ?? "http://localhost:2222/api/v1";
 
 async function fetchAnnouncementDetail(
   id: string
 ): Promise<AnnouncementDetailResponse> {
   const accessToken = cookies().get("accessToken")?.value;
 
-  const res = await fetch(`${baseUrl}/announcements/${id}`, {
+  const url = `${baseUrl}/announcements/${id}`;
+  console.log("🔍 요청 URL:", url);
+
+  const res = await fetch(url, {
     headers: {
       Authorization: accessToken ? `Bearer ${accessToken}` : "",
     },
@@ -35,7 +39,10 @@ async function fetchAnnouncementDetail(
   });
 
   if (!res.ok) {
-    throw new Error("Failed to fetch announcement detail");
+    const errorText = await res.text();
+    console.error(`❌ 요청 실패: ${res.status} - ${res.statusText}`);
+    console.error("응답 내용:", errorText);
+    throw new Error(`Failed to fetch announcement detail (${res.status})`);
   }
 
   return res.json();
@@ -46,8 +53,24 @@ const AnnouncementDetailPage = async ({
 }: {
   params: { id: string };
 }) => {
-  const detail = await fetchAnnouncementDetail(params.id);
-  console.log(detail);
+  let detail: AnnouncementDetailResponse;
+
+  try {
+    detail = await fetchAnnouncementDetail(params.id);
+  } catch (err) {
+    return (
+      <main className="max-w-2xl mx-auto py-12 px-6">
+        <h1 className="text-2xl font-bold text-red-600 text-center">
+          데이터를 불러올 수 없습니다.
+        </h1>
+        <p className="text-center text-gray-600 mt-4">
+          {err instanceof Error ? err.message : "알 수 없는 에러 발생"}
+        </p>
+      </main>
+    );
+  }
+
+
   return (
     <main className="max-w-2xl mx-auto py-12 px-6 bg-white">
       <h1 className="text-4xl font-extrabold mb-8 text-yellow-600 text-center">
@@ -66,9 +89,9 @@ const AnnouncementDetailPage = async ({
         </div>
       )}
 
-      {/* 상세정보 박스만 노란 배경 */}
       <section className="bg-yellow-50 rounded-2xl p-8 shadow-inner space-y-5 text-gray-800 text-lg">
         {[
+          { label: "동물 종류", value: detail.animalType },
           { label: "성별", value: detail.gender },
           { label: "품종", value: detail.breed },
           { label: "건강 상태", value: detail.health },
@@ -97,28 +120,12 @@ const AnnouncementDetailPage = async ({
           </p>
         ))}
       </section>
+
       <Link
         href={`/announcements/${detail.id}/apply`}
-        className="
-     mt-4
-w-full
-rounded-full      
-bg-amber-400
-py-3
-font-semibold
-text-white
-shadow-md
-transition
-hover:bg-amber-500
-disabled:opacity-50
-disabled:cursor-not-allowed
-block               
-mx-auto             
-text-center
-
-    "
+        className="mt-4 w-full rounded-full bg-amber-400 py-3 font-semibold text-white shadow-md transition hover:bg-amber-500 block mx-auto text-center"
       >
-        신청하기{" "}
+        신청하기
       </Link>
     </main>
   );
