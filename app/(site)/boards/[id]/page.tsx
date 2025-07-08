@@ -54,6 +54,9 @@ export default function BoardDetail() {
   async function getBoardDetail() {
     if (!id) return;
     try {
+      console.log("board", board?.email);
+      console.log("USER", user?.email);
+
       setLoading(true);
       const res = await api.get(`/boards/${id}`);
       console.log("res data", res.data);
