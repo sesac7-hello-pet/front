@@ -1,8 +1,8 @@
 "use client";
 
-import api from "@/app/lib/api";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import api from "@/app/lib/api";
 
 interface Announcement {
   id: number;
@@ -13,44 +13,47 @@ interface Announcement {
   image: string | null;
 }
 
+/** 백엔드 페이징 응답 DTO */
+interface AnnouncementPage {
+  page: number; // 0-based
+  size: number;
+  totalPages: number;
+  totalCount: number;
+  announcements: Announcement[];
+}
+
 const ITEMS_PER_PAGE = 9;
 
 export default function AnnouncementsPage() {
-  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const [data, setData] = useState<AnnouncementPage | null>(null);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
 
-  const totalPages = Math.ceil(announcements.length / ITEMS_PER_PAGE);
-
+  /* 페이지 변경될 때마다 서버 호출 */
   useEffect(() => {
-    fetchAnnouncements();
-  }, []);
+    fetchAnnouncements(page);
+  }, [page]);
 
-  async function fetchAnnouncements() {
+  async function fetchAnnouncements(p: number) {
+    setLoading(true);
     try {
-      const res = await api.get("/announcements");
-      setAnnouncements(res.data.announcements ?? []);
+      const res = await api.get<AnnouncementPage>(
+        `/announcements?page=${p}&size=${ITEMS_PER_PAGE}`
+      );
+      setData(res.data);
     } catch (err) {
       console.error(err);
+      setData(null);
     } finally {
       setLoading(false);
     }
   }
 
-  const currentPageItems = announcements.slice(
-    page * ITEMS_PER_PAGE,
-    (page + 1) * ITEMS_PER_PAGE
-  );
-
-  const goPrev = () => {
-    if (page > 0) setPage(page - 1);
-  };
-
-  const goNext = () => {
-    if (page < totalPages - 1) setPage(page + 1);
-  };
+  const goPrev = () => page > 0 && setPage(page - 1);
+  const goNext = () => data && page < data.totalPages - 1 && setPage(page + 1);
 
   if (loading) return <h1 className="text-center mt-20 text-xl">Loading…</h1>;
+  if (!data) return <h1 className="text-center mt-20 text-xl">조회 실패</h1>;
 
   return (
     <div className="min-h-screen bg-white py-10 px-4">
@@ -59,7 +62,7 @@ export default function AnnouncementsPage() {
       </h1>
 
       <ul className="grid grid-cols-3 gap-6 max-w-5xl mx-auto mb-6">
-        {currentPageItems.map((item) => (
+        {data.announcements.map((item) => (
           <li key={item.id}>
             <Link
               href={`/announcements/${item.id}`}
@@ -105,14 +108,14 @@ export default function AnnouncementsPage() {
         </button>
 
         <span className="text-sm text-gray-600">
-          {page + 1} / {totalPages}
+          {page + 1} / {data.totalPages}
         </span>
 
         <button
           onClick={goNext}
-          disabled={page >= totalPages - 1}
+          disabled={page >= data.totalPages - 1}
           className={`px-3 py-1 rounded ${
-            page >= totalPages - 1
+            page >= data.totalPages - 1
               ? "bg-gray-300 text-white cursor-not-allowed"
               : "bg-yellow-400 text-white hover:bg-yellow-500"
           }`}

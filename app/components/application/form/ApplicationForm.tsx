@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import api from "@/app/lib/api";
+import { UserDetailData, useUserStore } from "@/app/store/UserStore";
 import {
     initialHousingInfo,
     initialFamilyInfo,
@@ -29,6 +30,9 @@ export default function ApplicationForm() {
     const id = Array.isArray(params.id) ? params.id[0] : params.id ?? "0";
     const announcementId = Number(id);
 
+    const { user } = useUserStore();
+    const [userDetail, setUserDetail] = useState<UserDetailData | null>(null);
+
     const [reason, setReason] = useState("");
     const [housingInfo, setHousingInfo] = useState(initialHousingInfo);
     const [familyInfo, setFamilyInfo] = useState(initialFamilyInfo);
@@ -37,6 +41,14 @@ export default function ApplicationForm() {
     const [petExperienceInfo, setPetExperienceInfo] = useState(initialPetExperienceInfo);
     const [futurePlanInfo, setFuturePlanInfo] = useState(initialFuturePlanInfo);
     const [agreement, setAgreement] = useState(initialAgreement);
+
+    useEffect(() => {
+        if (user) {
+            api.get<UserDetailData>("/me")
+                .then((res) => setUserDetail(res.data))
+                .catch((err) => console.error("사용자 상세 조회 실패", err));
+        }
+    }, [user]);
 
     const handleSubmit = async () => {
         if (!agreement.agreedToAccuracy || !agreement.agreedToCare || !agreement.agreedToPrivacy) {
@@ -69,7 +81,14 @@ export default function ApplicationForm() {
         <div className="max-w-2xl mx-auto p-6 bg-[#FFFDF0] shadow rounded-xl space-y-6 my-10">
             <h1 className="text-xl font-bold text-center mb-8">입양 신청서</h1>
 
-            <ApplicationInfoSection reason={reason} setReason={setReason} />
+            <ApplicationInfoSection
+                reason={reason}
+                setReason={setReason}
+                name={userDetail?.nickname || user?.nickname || "-"}
+                phoneNumber={userDetail?.phoneNumber || "-"}
+                email={user?.email || "-"}
+            />
+
             <HousingSection housingInfo={housingInfo} setHousingInfo={setHousingInfo} />
             <FamilySection familyInfo={familyInfo} setFamilyInfo={setFamilyInfo} />
             <CareSection careInfo={careInfo} setCareInfo={setCareInfo} />

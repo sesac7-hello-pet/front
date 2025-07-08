@@ -122,9 +122,8 @@ export default function MyPage() {
                 ) : (
                   <ApplicationList />
                 ))}
-              {myBoard && <MyBoardsList />}
-
-              {/* {myComment && <CommentsList />} */}
+              {myBoard && <h1 className="text-center py-10">myBoard</h1>}
+              {myComment && <h1 className="text-center py-10">myComment</h1>}
             </div>
           </div>
         </div>
