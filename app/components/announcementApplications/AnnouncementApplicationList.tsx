@@ -64,7 +64,7 @@ export default function AnnouncementApplicationList({ announcementId }: Props) {
                 <span>{announcementId}</span>
                 <span>
                     {announcementCreatedAt
-                        ? new Date(announcementCreatedAt).toLocaleDateString()
+                        ? new Date(announcementCreatedAt).toISOString().slice(0, 10)
                         : "-"}
                 </span>
             </div>
