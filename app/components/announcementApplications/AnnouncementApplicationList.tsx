@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import api from "@/app/lib/api";
 import AnnouncementApplicationItem from "./AnnouncementApplicationItem";
 import ConfirmModal from "@/app/components/ConfirmModal";
@@ -13,6 +13,7 @@ interface Props {
 
 interface Application {
     applicationId: number;
+    applicationStatusLabel: string;
     userName: string;
     userPhoneNumber: string;
     userEmail: string;
@@ -25,12 +26,7 @@ export default function AnnouncementApplicationList({ announcementId }: Props) {
     const [selectedAppId, setSelectedAppId] = useState<number | null>(null);
 
     const searchParams = useSearchParams();
-    const router = useRouter();
     const currentPage = Number(searchParams.get("page")) || 1;
-
-    useEffect(() => {
-        fetchApplications(currentPage);
-    }, [currentPage]);
 
     const fetchApplications = async (pageNum: number) => {
         try {
@@ -45,12 +41,16 @@ export default function AnnouncementApplicationList({ announcementId }: Props) {
         }
     };
 
+    useEffect(() => {
+        fetchApplications(currentPage);
+    }, [currentPage]);
+
     const handleApprove = async () => {
         if (selectedAppId === null) return;
         try {
             await api.put(`/announcements/${announcementId}/applications/${selectedAppId}`);
             alert("신청이 승인되었습니다.");
-            router.push(`/`);
+            await fetchApplications(currentPage); // 상태 갱신
         } catch (e: any) {
             alert("승인에 실패했습니다: " + (e.response?.data?.message || e.message));
         } finally {
@@ -71,14 +71,20 @@ export default function AnnouncementApplicationList({ announcementId }: Props) {
                 </span>
             </div>
 
-            {/* 신청자 리스트 */}
-            {applications.map((app) => (
-                <AnnouncementApplicationItem
-                    key={app.applicationId}
-                    application={app}
-                    onApprove={() => setSelectedAppId(app.applicationId)}
-                />
-            ))}
+            {/* 신청자 리스트 또는 없음 안내 */}
+            {applications.length === 0 ? (
+                <div className="text-center text-gray-500 py-10">
+                    해당 공고에 접수된 신청 내역이 없습니다.
+                </div>
+            ) : (
+                applications.map((app) => (
+                    <AnnouncementApplicationItem
+                        key={app.applicationId}
+                        application={app}
+                        onApprove={() => setSelectedAppId(app.applicationId)}
+                    />
+                ))
+            )}
 
             {/* 페이지네이션 */}
             {totalPages > 1 && (

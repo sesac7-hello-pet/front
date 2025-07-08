@@ -2,19 +2,12 @@ interface Props {
     application: {
         applicationId: number;
         announcementId: number;
-        applicationStatusLabel: string;
+        applicationStatusLabel: string; // 이제는 이미 한글 상태로 전달됨
         submittedAt: string;
         petImageUrl: string;
     };
     onClick: () => void;
 }
-
-const STATUS_LABEL_MAP: Record<string, string> = {
-    APPROVED: "승인",
-    PENDING: "대기",
-    REJECTED: "거절",
-    CANCELLED: "취소",
-};
 
 export default function ApplicationItem({ application, onClick }: Props) {
     return (
@@ -26,8 +19,7 @@ export default function ApplicationItem({ application, onClick }: Props) {
                             입양
                         </span>
                         <span className="bg-amber-400 text-white text-base px-3 py-1 rounded-xl">
-                            {STATUS_LABEL_MAP[application.applicationStatusLabel] ||
-                                application.applicationStatusLabel}
+                            {application.applicationStatusLabel}
                         </span>
                     </div>
                     <div className="flex space-x-15">
