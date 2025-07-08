@@ -22,6 +22,7 @@ import CareSection from "./section/CareSection";
 import FinancialSection from "./section/FinancialSection";
 import PetExperienceSection from "./section/PetExperienceSection";
 import FuturePlanSection from "./section/FuturePlanSection";
+import RequireRole from "../../RequireRole";
 
 export default function ApplicationForm() {
     const router = useRouter();
@@ -78,38 +79,43 @@ export default function ApplicationForm() {
     };
 
     return (
-        <div className="max-w-2xl mx-auto p-6 bg-[#FFFDF0] shadow rounded-xl space-y-6 my-10">
-            <h1 className="text-xl font-bold text-center mb-8">입양 신청서</h1>
+        <RequireRole allow={["USER"]} fallback="/auth/login">
+            <div className="max-w-2xl mx-auto p-6 bg-[#FFFDF0] shadow rounded-xl space-y-6 my-10">
+                <h1 className="text-xl font-bold text-center mb-8">입양 신청서</h1>
 
-            <ApplicationInfoSection
-                reason={reason}
-                setReason={setReason}
-                name={userDetail?.nickname || user?.nickname || "-"}
-                phoneNumber={userDetail?.phoneNumber || "-"}
-                email={user?.email || "-"}
-            />
+                <ApplicationInfoSection
+                    reason={reason}
+                    setReason={setReason}
+                    name={userDetail?.nickname || user?.nickname || "-"}
+                    phoneNumber={userDetail?.phoneNumber || "-"}
+                    email={user?.email || "-"}
+                />
 
-            <HousingSection housingInfo={housingInfo} setHousingInfo={setHousingInfo} />
-            <FamilySection familyInfo={familyInfo} setFamilyInfo={setFamilyInfo} />
-            <CareSection careInfo={careInfo} setCareInfo={setCareInfo} />
-            <FinancialSection financialInfo={financialInfo} setFinancialInfo={setFinancialInfo} />
-            <PetExperienceSection
-                petExperienceInfo={petExperienceInfo}
-                setPetExperienceInfo={setPetExperienceInfo}
-            />
-            <FuturePlanSection
-                futurePlanInfo={futurePlanInfo}
-                setFuturePlanInfo={setFuturePlanInfo}
-            />
+                <HousingSection housingInfo={housingInfo} setHousingInfo={setHousingInfo} />
+                <FamilySection familyInfo={familyInfo} setFamilyInfo={setFamilyInfo} />
+                <CareSection careInfo={careInfo} setCareInfo={setCareInfo} />
+                <FinancialSection
+                    financialInfo={financialInfo}
+                    setFinancialInfo={setFinancialInfo}
+                />
+                <PetExperienceSection
+                    petExperienceInfo={petExperienceInfo}
+                    setPetExperienceInfo={setPetExperienceInfo}
+                />
+                <FuturePlanSection
+                    futurePlanInfo={futurePlanInfo}
+                    setFuturePlanInfo={setFuturePlanInfo}
+                />
 
-            <AgreementSection agreement={agreement} setAgreement={setAgreement} />
+                <AgreementSection agreement={agreement} setAgreement={setAgreement} />
 
-            <button
-                onClick={handleSubmit}
-                className="bg-amber-400 text-white font-semibold py-1 px-5 rounded-xl hover:bg-amber-500 mx-auto block mt-20"
-            >
-                입양 신청
-            </button>
-        </div>
+                <button
+                    onClick={handleSubmit}
+                    className="bg-amber-400 text-white font-semibold py-1 px-5 rounded-xl hover:bg-amber-500 mx-auto block mt-20"
+                >
+                    입양 신청
+                </button>
+            </div>
+        </RequireRole>
     );
 }
