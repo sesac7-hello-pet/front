@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import Link from "next/link";
 
 interface AnnouncementDetailResponse {
   id: number;
@@ -96,6 +97,29 @@ const AnnouncementDetailPage = async ({
           </p>
         ))}
       </section>
+      <Link
+        href={`/announcements/${detail.id}/apply`}
+        className="
+     mt-4
+w-full
+rounded-full      
+bg-amber-400
+py-3
+font-semibold
+text-white
+shadow-md
+transition
+hover:bg-amber-500
+disabled:opacity-50
+disabled:cursor-not-allowed
+block               
+mx-auto             
+text-center
+
+    "
+      >
+        신청하기{" "}
+      </Link>
     </main>
   );
 };
