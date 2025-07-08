@@ -1,5 +1,6 @@
 "use client";
 
+import { formatPhoneNumber } from "@/app/lib/formatPhoneNumber";
 import { useRouter } from "next/navigation";
 
 interface Props {
@@ -19,7 +20,7 @@ export default function AnnouncementApplicationItem({ application, onApprove }: 
         <div className="flex justify-between items-center border-b border-gray-300 py-2">
             <div className="flex-1 flex space-x-20 text-base">
                 <span className="w-24">{application.userName}</span>
-                <span className="w-32">{application.userPhoneNumber}</span>
+                <span className="w-32">{formatPhoneNumber(application.userPhoneNumber)}</span>
                 <span className="w-48">{application.userEmail}</span>
             </div>
             <div className="flex space-x-3">

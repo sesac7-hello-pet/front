@@ -40,7 +40,9 @@ export default function ApplicationItem({ application, onClick }: Props) {
                         <div className="flex flex-col space-y-2 text-base text-gray-800">
                             <div>{application.applicationId}</div>
                             <div>{application.announcementId}</div>
-                            <div>{new Date(application.submittedAt).toLocaleDateString()}</div>
+                            <div>
+                                {new Date(application.submittedAt).toISOString().slice(0, 10)}
+                            </div>
                         </div>
                     </div>
                 </div>
