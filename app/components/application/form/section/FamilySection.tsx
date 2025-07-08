@@ -53,7 +53,7 @@ export default function FamilySection({ familyInfo, setFamilyInfo, isReadOnly = 
                     {/* 가족 수 */}
                     <div className="space-y-3">
                         <p className="font-medium text-sm">
-                            현재 함께 거주하는 가족은 몇 명인가요?
+                            현재 함께 거주하는 가족은 본인을 포함하여 몇 명인가요?
                         </p>
                         <input
                             type="number"
