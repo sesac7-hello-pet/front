@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import api from "@/app/lib/api";
 import AnnouncementApplicationItem from "./AnnouncementApplicationItem";
 import ConfirmModal from "@/app/components/ConfirmModal";
@@ -27,6 +27,7 @@ export default function AnnouncementApplicationList({ announcementId }: Props) {
 
     const searchParams = useSearchParams();
     const currentPage = Number(searchParams.get("page")) || 1;
+    const router = useRouter();
 
     const fetchApplications = async (pageNum: number) => {
         try {
@@ -36,8 +37,13 @@ export default function AnnouncementApplicationList({ announcementId }: Props) {
             setApplications(res.data.applications);
             setTotalPages(res.data.totalPages);
             setAnnouncementCreatedAt(res.data.announcementCreatedAt);
-        } catch {
-            alert("신청 내역을 불러오지 못했습니다.");
+        } catch (e: any) {
+            if (e.response?.status === 403) {
+                alert("해당 공고에 대한 접근 권한이 없습니다.");
+                router.push("/");
+            } else {
+                alert("신청 내역을 불러오지 못했습니다.");
+            }
         }
     };
 
@@ -50,7 +56,7 @@ export default function AnnouncementApplicationList({ announcementId }: Props) {
         try {
             await api.put(`/announcements/${announcementId}/applications/${selectedAppId}`);
             alert("신청이 승인되었습니다.");
-            await fetchApplications(currentPage); // 상태 갱신
+            await fetchApplications(currentPage);
         } catch (e: any) {
             alert("승인에 실패했습니다: " + (e.response?.data?.message || e.message));
         } finally {
