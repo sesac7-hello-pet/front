@@ -42,7 +42,14 @@ export default function MyAnnouncementsPage() {
       const res = await api.get<AnnouncementPageResponse>("/me/announcements", {
         headers: { Authorization: token ? `Bearer ${token}` : "" },
       });
-      setMyAnnouncements(res.data.announcements ?? []);
+
+      // 🔽 최신순 정렬
+      const sorted = (res.data.announcements ?? []).sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+
+      setMyAnnouncements(sorted);
     } catch (err) {
       console.error("공고 불러오기 실패", err);
     } finally {

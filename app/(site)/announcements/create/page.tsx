@@ -125,6 +125,7 @@ export default function Page() {
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
             className="border border-yellow-300 rounded px-2 py-1 bg-white"
+            min={new Date().toISOString().split("T")[0] + "T00:00"}
           />
         </div>
 
