@@ -8,6 +8,7 @@ import UserDetail from "@/app/components/UserDetail";
 import UserList from "@/app/components/UserList";
 import { useUserStore } from "@/app/store/UserStore";
 import { useState } from "react";
+import MyAnnouncementsPage from "@/app/components/MyAnnouncements";
 
 export default function MyPage() {
   const user = useUserStore((s) => s.user);
@@ -119,7 +120,7 @@ export default function MyPage() {
                 (user?.role === "ADMIN" ? (
                   <UserList />
                 ) : user?.role === "SHELTER" ? (
-                  <div className="text-center py-10">shelter</div>
+                  <MyAnnouncementsPage />
                 ) : (
                   <ApplicationList />
                 ))}
