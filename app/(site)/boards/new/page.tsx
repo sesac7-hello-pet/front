@@ -13,7 +13,7 @@ export default function BoardCreate() {
   const router = useRouter();
 
   const changeButton = (state: string, current: string) =>
-    `w-16 rounded-full text-xs px-2 py-1 font-medium shadow-sm transition border
+    `w-auto rounded-full text-xs px-2 py-1 font-medium shadow-sm transition border
         ${
           state == current
             ? "bg-[#FFDEA7] text-gray-700 border-transparent"
