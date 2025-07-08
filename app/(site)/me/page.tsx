@@ -1,6 +1,7 @@
 "use client";
 
 import ApplicationList from "@/app/components/application/ApplicationList";
+import MyBoardsList from "@/app/components/boards/MyBoardList";
 import RequireRole from "@/app/components/RequireRole";
 import MyBoardsList from "@/app/components/boards/MyBoardList";
 import UserDetail from "@/app/components/UserDetail";
@@ -122,8 +123,9 @@ export default function MyPage() {
                 ) : (
                   <ApplicationList />
                 ))}
-              {myBoard && <h1 className="text-center py-10">myBoard</h1>}
-              {myComment && <h1 className="text-center py-10">myComment</h1>}
+              {myBoard && <MyBoardsList />}
+
+              {/* {myComment && <CommentsList />} */}
             </div>
           </div>
         </div>
