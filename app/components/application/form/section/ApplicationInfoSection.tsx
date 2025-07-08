@@ -1,3 +1,4 @@
+import { formatPhoneNumber } from "@/app/lib/formatPhoneNumber";
 import { useParams } from "next/navigation";
 
 interface Props {
@@ -37,7 +38,7 @@ export default function ApplicationInfoSection({
                     <div className="text-gray-800">{displayId}</div>
                     <div className="text-gray-800">입양</div>
                     <div className="text-gray-800">{name || "-"}</div>
-                    <div className="text-gray-800">{phoneNumber || "-"}</div>
+                    <div className="text-gray-800">{formatPhoneNumber(phoneNumber) || "-"}</div>
                     <div className="text-gray-800">{email || "-"}</div>
                 </div>
             </div>

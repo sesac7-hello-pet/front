@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import api from "@/app/lib/api";
 import AnnouncementApplicationItem from "./AnnouncementApplicationItem";
 import ConfirmModal from "@/app/components/ConfirmModal";
+import Pagination from "@/app/components/Pagination";
 
 interface Props {
     announcementId: number;
@@ -19,21 +20,22 @@ interface Application {
 
 export default function AnnouncementApplicationList({ announcementId }: Props) {
     const [applications, setApplications] = useState<Application[]>([]);
-    const [page, setPage] = useState(0);
     const [totalPages, setTotalPages] = useState(1);
     const [announcementCreatedAt, setAnnouncementCreatedAt] = useState<string>("");
     const [selectedAppId, setSelectedAppId] = useState<number | null>(null);
 
+    const searchParams = useSearchParams();
     const router = useRouter();
+    const currentPage = Number(searchParams.get("page")) || 1;
 
     useEffect(() => {
-        fetchApplications(page);
-    }, [page]);
+        fetchApplications(currentPage);
+    }, [currentPage]);
 
     const fetchApplications = async (pageNum: number) => {
         try {
             const res = await api.get(
-                `/announcements/${announcementId}/applications?page=${pageNum}&size=10`
+                `/announcements/${announcementId}/applications?page=${pageNum - 1}&size=10`
             );
             setApplications(res.data.applications);
             setTotalPages(res.data.totalPages);
@@ -64,7 +66,7 @@ export default function AnnouncementApplicationList({ announcementId }: Props) {
                 <span>{announcementId}</span>
                 <span>
                     {announcementCreatedAt
-                        ? new Date(announcementCreatedAt).toLocaleDateString()
+                        ? new Date(announcementCreatedAt).toISOString().slice(0, 10)
                         : "-"}
                 </span>
             </div>
@@ -80,20 +82,8 @@ export default function AnnouncementApplicationList({ announcementId }: Props) {
 
             {/* 페이지네이션 */}
             {totalPages > 1 && (
-                <div className="flex justify-center space-x-2 mt-4">
-                    {[...Array(totalPages)].map((_, idx) => (
-                        <button
-                            key={idx}
-                            onClick={() => setPage(idx)}
-                            className={`px-3 py-1 rounded border ${
-                                page === idx
-                                    ? "bg-amber-200 text-amber-800 font-bold"
-                                    : "bg-gray-100 hover:bg-gray-200"
-                            }`}
-                        >
-                            {idx + 1}
-                        </button>
-                    ))}
+                <div className="mt-6">
+                    <Pagination currentPage={currentPage} totalPages={totalPages} blockSize={5} />
                 </div>
             )}
 

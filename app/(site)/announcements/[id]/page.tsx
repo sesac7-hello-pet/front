@@ -70,6 +70,7 @@ const AnnouncementDetailPage = async ({
     );
   }
 
+
   return (
     <main className="max-w-2xl mx-auto py-12 px-6 bg-white">
       <h1 className="text-4xl font-extrabold mb-8 text-yellow-600 text-center">

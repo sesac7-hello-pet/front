@@ -26,7 +26,7 @@ export default function EditPage() {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
   /* 제출 시 true → 모든 에러 표시 */
-  const submitted = useRef(false);
+  const [submitted, setSubmitted] = useState(false);
 
   /* 에러 메시지 */
   const [errors, setErrors] = useState<Record<string, string>>({});

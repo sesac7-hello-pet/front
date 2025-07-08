@@ -38,21 +38,25 @@ export default function Pagination({
     }
   };
 
-  const goToBlock = (block: number) => {
-    const page = (block - 1) * blockSize + 1;
-    goToPage(page);
-  };
+  // ✅ 이전 페이지 이동 함수 추가
+  const goToPrevPage = () => goToPage(currentPage - 1);
+
+  // ✅ 다음 페이지 이동 함수 추가
+  const goToNextPage = () => goToPage(currentPage + 1);
+
+  const goToFirst = () => goToPage(1);
+  const goToLast = () => goToPage(totalPages);
 
   return (
     <div className="flex justify-center items-center gap-2 mt-6">
       {/* 처음 */}
       <button
-        onClick={() => goToBlock(1)}
-        disabled={currentBlock === 1}
-        className={`px-2 text-sm ${
-          currentBlock === 1
+        onClick={goToFirst}
+        disabled={currentPage === 1}
+        className={`px-2 text-sm transition ${
+          currentPage === 1
             ? "text-gray-300 cursor-not-allowed"
-            : "text-yellow-600 hover:text-yellow-800"
+            : "text-yellow-600 hover:text-yellow-800 hover:bg-yellow-100"
         }`}
       >
         «
@@ -60,12 +64,12 @@ export default function Pagination({
 
       {/* 이전 블록 */}
       <button
-        onClick={() => goToBlock(currentBlock - 1)}
-        disabled={currentBlock === 1}
-        className={`px-2 text-sm ${
-          currentBlock === 1
+        onClick={goToPrevPage}
+        disabled={currentPage === 1}
+        className={`px-2 text-sm transition ${
+          currentPage === 1
             ? "text-gray-300 cursor-not-allowed"
-            : "text-yellow-600 hover:text-yellow-800"
+            : "text-yellow-600 hover:text-yellow-800 hover:bg-yellow-100"
         }`}
       >
         &lt;
@@ -80,10 +84,10 @@ export default function Pagination({
             key={page}
             onClick={() => goToPage(page)}
             disabled={isCurrent}
-            className={`px-3 py-1 text-sm transition ${
+            className={`px-3 py-1 text-sm rounded transition ${
               isCurrent
-                ? "rounded-full bg-[#F5C044]  text-white cursor-not-allowed"
-                : "text-yellow-700 hover:text-yellow-900"
+                ? "bg-[#F5C044] text-white font-semibold cursor-not-allowed"
+                : "text-yellow-700 hover:bg-yellow-100 hover:font-semibold"
             }`}
           >
             {page}
@@ -93,12 +97,12 @@ export default function Pagination({
 
       {/* 다음 블록 */}
       <button
-        onClick={() => goToBlock(currentBlock + 1)}
-        disabled={currentBlock === totalBlocks}
-        className={`px-2 text-sm ${
-          currentBlock === totalBlocks
+        onClick={goToNextPage}
+        disabled={currentPage === totalPages}
+        className={`px-2 text-sm transition ${
+          currentPage === totalPages
             ? "text-gray-300 cursor-not-allowed"
-            : "text-yellow-600 hover:text-yellow-800"
+            : "text-yellow-600 hover:text-yellow-800 hover:bg-yellow-100"
         }`}
       >
         &gt;
@@ -106,12 +110,12 @@ export default function Pagination({
 
       {/* 마지막 */}
       <button
-        onClick={() => goToBlock(totalBlocks)}
-        disabled={currentBlock === totalBlocks}
-        className={`px-2 text-sm ${
-          currentBlock === totalBlocks
+        onClick={goToLast}
+        disabled={currentPage === totalPages}
+        className={`px-2 text-sm transition ${
+          currentPage === totalPages
             ? "text-gray-300 cursor-not-allowed"
-            : "text-yellow-600 hover:text-yellow-800"
+            : "text-yellow-600 hover:text-yellow-800 hover:bg-yellow-100"
         }`}
       >
         »

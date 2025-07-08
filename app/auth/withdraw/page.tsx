@@ -1,12 +1,15 @@
 "use client";
 import RequireRole from "@/app/components/RequireRole";
 import api from "@/app/lib/api";
+import { useUserStore } from "@/app/store/UserStore";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 export default function Withdraw() {
   const [password, setPassword] = useState("");
   const [verified, setVerified] = useState(false);
+
+  const clearUser = useUserStore((s) => s.clearUser);
 
   const router = useRouter();
 
@@ -25,6 +28,7 @@ export default function Withdraw() {
   async function withdraw() {
     try {
       await api.delete("/me");
+      clearUser();
       alert("탈퇴 되었습니다.");
       router.push("/");
     } catch (err) {
