@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import api from "@/app/lib/api";
 import ApplicationItem from "@/app/components/application/ApplicationItem";
 import ConfirmModal from "@/app/components/ConfirmModal";
+import Pagination from "@/app/components/Pagination";
 
 interface Application {
     applicationId: number;
@@ -15,17 +17,19 @@ interface Application {
 
 export default function ApplicationList() {
     const [applications, setApplications] = useState<Application[]>([]);
-    const [page, setPage] = useState(0);
     const [totalPages, setTotalPages] = useState(1);
     const [selectedId, setSelectedId] = useState<number | null>(null);
 
+    const searchParams = useSearchParams();
+    const currentPage = useMemo(() => Number(searchParams.get("page")) || 1, [searchParams]);
+
     useEffect(() => {
-        fetchApplications(page);
-    }, [page]);
+        fetchApplications(currentPage);
+    }, [searchParams]);
 
     const fetchApplications = async (pageNum: number) => {
         try {
-            const res = await api.get(`/me/applications?page=${pageNum}&size=10`);
+            const res = await api.get(`/me/applications?page=${pageNum - 1}&size=10`);
             setApplications(res.data.applications);
             setTotalPages(res.data.totalPages);
         } catch (e) {
@@ -39,7 +43,7 @@ export default function ApplicationList() {
             await api.delete(`/applications/${selectedId}`);
             alert("신청서가 삭제되었습니다.");
             setSelectedId(null);
-            fetchApplications(page); // 최신 데이터로 갱신
+            fetchApplications(currentPage); // 현재 페이지로 재조회
         } catch (e) {
             alert("신청서 삭제에 실패했습니다.");
         }
@@ -60,22 +64,8 @@ export default function ApplicationList() {
             )}
 
             {totalPages > 1 && (
-                <div className="flex justify-center space-x-2 mt-4">
-                    {[...Array(totalPages)].map((_, idx) => (
-                        <button
-                            key={idx}
-                            onClick={() => {
-                                if (page !== idx) setPage(idx);
-                            }}
-                            className={`px-3 py-1 rounded border ${
-                                page === idx
-                                    ? "bg-amber-200 text-amber-800 font-bold"
-                                    : "bg-gray-100 hover:bg-gray-200"
-                            }`}
-                        >
-                            {idx + 1}
-                        </button>
-                    ))}
+                <div className="mt-6">
+                    <Pagination currentPage={currentPage} totalPages={totalPages} blockSize={5} />
                 </div>
             )}
 
