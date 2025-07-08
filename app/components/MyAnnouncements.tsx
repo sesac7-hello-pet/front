@@ -21,7 +21,10 @@ interface AnnouncementPageResponse {
   totalCount: number;
   announcements: AnnouncementListItem[];
 }
-
+const animalStatus: Record<"IN_PROGRESS" | "COMPLETED", string> = {
+  IN_PROGRESS: "입양 중",
+  COMPLETED: "입양완료",
+};
 export default function MyAnnouncementsPage() {
   const [myAnnouncements, setMyAnnouncements] = useState<
     AnnouncementListItem[]
@@ -71,7 +74,14 @@ export default function MyAnnouncementsPage() {
       <h1 className="text-center text-yellow-600 text-3xl font-extrabold mb-10">
         내가 등록한 입양 공고
       </h1>
-
+      <div className="text-center mb-10">
+        <Link
+          href="/announcements/create"
+          className="inline-block rounded-full bg-yellow-400 hover:bg-yellow-500 text-white font-semibold px-6 py-2 transition"
+        >
+          입양 게시글 등록하기
+        </Link>
+      </div>
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
         {myAnnouncements.map((item) => (
           <li
@@ -94,7 +104,9 @@ export default function MyAnnouncementsPage() {
                 </div>
               )}
               <p className="text-orange-500 text-lg font-bold">{item.breed}</p>
-              <p className="text-sm text-yellow-800">상태: {item.status}</p>
+              <p className="text-sm text-yellow-800">
+                상태: {animalStatus[item.status]}
+              </p>
               <p className="text-sm text-yellow-800">
                 보호소: {item.shelterName}
               </p>
@@ -118,7 +130,9 @@ export default function MyAnnouncementsPage() {
                 삭제
               </button>
               <button
-                onClick={() => router.push(`/applications/${item.id}`)}
+                onClick={() =>
+                  router.push(`/announcements/${item.id}/applications`)
+                }
                 className="w-1/3 px-2 py-2 text-sm bg-red-400 text-white rounded-full hover:bg-yellow-700 transition text-center"
               >
                 신청 내역
