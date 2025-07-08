@@ -21,6 +21,7 @@ export default function EditAnnouncementPage() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const announcementId = Array.isArray(id) ? id[0] : id;
 
   useEffect(() => {
     if (!id) return;
@@ -165,16 +166,14 @@ export default function EditAnnouncementPage() {
           />
 
           {/* 공고 종료일 */}
-          <div>
-            <label className="block mb-1">공고 종료일</label>
-            <input
-              type="datetime-local"
-              name="selectedDate"
-              value={form.selectedDate}
-              onChange={handleChange}
-              className="border border-yellow-300 rounded px-2 py-1 bg-white"
-            />
-          </div>
+          <input
+            type="datetime-local"
+            name="selectedDate"
+            value={form.selectedDate}
+            onChange={handleChange}
+            className="border border-yellow-300 rounded px-2 py-1 bg-white"
+            min={new Date().toISOString().slice(0, 16)}
+          />
 
           <input
             name="image"
