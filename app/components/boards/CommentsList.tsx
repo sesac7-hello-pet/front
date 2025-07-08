@@ -1,5 +1,5 @@
 import { Comment } from "@/app/lib/boardTypes";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import api from "@/app/lib/api";
 import Pagination from "../Pagination";
 
@@ -11,8 +11,7 @@ export default function CommentsList() {
   const router = useRouter();
 
   // ✅ URL에서 page 쿼리 추출 (useMemo로 최적화)
-  const pageStr = searchParams.get("page") || "1";
-  const page = parseInt(pageStr, 10);
+  const page = parseInt(searchParams.get("page") || "1"); //
 
   const [totalPages, setTotalPages] = useState(1);
   const [comments, setComments] = useState<Comment[]>([]);
@@ -25,11 +24,12 @@ export default function CommentsList() {
     try {
       const params = new URLSearchParams({
         page: String(page - 1),
-        size: "10",
+        size: "5",
+        sort: "createdAt,desc",
       });
       const res = await api.get(`/me/comments?${params.toString()}`);
       setComments(res.data.commentList);
-      setTotalPages(res.data.totalPages);
+      setTotalPages(res.data.totalPage);
       console.log("✅ 댓글 응답:", res.data); // 👈 이걸 추가하세요
     } catch (e) {
       alert("댓글 내역을 불러오지 못했습니다.");
