@@ -3,6 +3,7 @@
 import ApplicationList from "@/app/components/application/ApplicationList";
 import MyBoardsList from "@/app/components/boards/MyBoardList";
 import RequireRole from "@/app/components/RequireRole";
+import MyBoardsList from "@/app/components/boards/MyBoardList";
 import UserDetail from "@/app/components/UserDetail";
 import UserList from "@/app/components/UserList";
 import { useUserStore } from "@/app/store/UserStore";
