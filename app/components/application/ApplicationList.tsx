@@ -58,7 +58,13 @@ export default function ApplicationList() {
                     <ApplicationItem
                         key={app.applicationId}
                         application={app}
-                        onClick={() => setSelectedId(app.applicationId)}
+                        onClick={() => {
+                            if (app.applicationStatusLabel === "승인") {
+                                alert("승인된 신청서는 삭제할 수 없습니다.");
+                                return;
+                            }
+                            setSelectedId(app.applicationId);
+                        }}
                     />
                 ))
             )}
