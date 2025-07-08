@@ -47,13 +47,17 @@ export default function ApplicationList() {
 
     return (
         <div>
-            {applications.map((app) => (
-                <ApplicationItem
-                    key={app.applicationId}
-                    application={app}
-                    onClick={() => setSelectedId(app.applicationId)}
-                />
-            ))}
+            {applications.length === 0 ? (
+                <div className="text-center text-gray-500 py-10">입양 신청 내역이 없습니다.</div>
+            ) : (
+                applications.map((app) => (
+                    <ApplicationItem
+                        key={app.applicationId}
+                        application={app}
+                        onClick={() => setSelectedId(app.applicationId)}
+                    />
+                ))
+            )}
 
             {totalPages > 1 && (
                 <div className="flex justify-center space-x-2 mt-4">
