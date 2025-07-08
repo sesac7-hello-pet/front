@@ -1,8 +1,9 @@
 "use client";
 
 import ApplicationList from "@/app/components/application/ApplicationList";
-import RequireRole from "@/app/components/RequireRole";
+import CommentsList from "@/app/components/boards/CommentsList";
 import MyBoardsList from "@/app/components/boards/MyBoardList";
+import RequireRole from "@/app/components/RequireRole";
 import UserDetail from "@/app/components/UserDetail";
 import UserList from "@/app/components/UserList";
 import { useUserStore } from "@/app/store/UserStore";
@@ -125,7 +126,7 @@ export default function MyPage() {
                 ))}
               {myBoard && <MyBoardsList />}
 
-              {/* {myComment && <CommentsList />} */}
+              {myComment && <CommentsList />}
             </div>
           </div>
         </div>

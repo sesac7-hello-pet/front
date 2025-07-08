@@ -64,7 +64,7 @@ export default function BoardDetail() {
       // 여기서 댓글을 createdAt 기준으로 정렬해서 setComments
       const sortedComments = (res.data.commentList ?? []).sort(
         (a, b) =>
-          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
       setComments(sortedComments);
       console.log("comment", res.data.commentList);
