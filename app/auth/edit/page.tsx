@@ -1,10 +1,10 @@
 "use client";
 import RequireRole from "@/app/components/RequireRole";
 import api from "@/app/lib/api";
-import { UserDetailData } from "@/app/store/UserStore";
+import { UserDetailData, useUserStore } from "@/app/store/UserStore";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 const PASSWORD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{6,}$/; // 영문·숫자·특수문자 포함 6자+
 const KOREAN_REGEX = /^[가-힣]+$/;
@@ -19,6 +19,10 @@ export default function EditPage() {
   const [nickname, setNickname] = useState("");
   const [address, setAddress] = useState("");
   const [profileUrl, setProfileUrl] = useState("");
+
+  const currentUser = useUserStore((s) => s.user);
+  const setCurrentUser = useUserStore((s) => s.setUser);
+  const clearUser = useUserStore((s) => s.clearUser);
 
   const [nicknameChecked, setNicknameChecked] = useState(false);
 
@@ -155,7 +159,13 @@ export default function EditPage() {
     };
     try {
       const res = await api.put("/me", payload);
+      const email = currentUser?.email;
       console.log(res);
+      clearUser();
+      await api.delete("/auth/logout");
+      await api.post("/auth/login", { email, password }).then((res) => {
+        setCurrentUser(res.data);
+      });
       alert("정보 수정이 완료되었습니다!");
       router.push("/me");
     } catch (error) {
