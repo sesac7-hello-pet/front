@@ -24,7 +24,7 @@ export default function MyBoardsList() {
     try {
       const params = new URLSearchParams({
         page: String(page - 1),
-        size: "10",
+        size: "5",
       });
       const res = await api.get(`/me/boards?${params.toString()}`);
       setBoards(res.data.boardList);
