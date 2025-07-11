@@ -122,9 +122,17 @@ export default function AnnouncementDetailPage() {
                     href={`/announcements/${detail.id}/apply`}
                     className="mt-4 w-full rounded-full bg-amber-400 py-3 font-semibold text-white shadow-md transition hover:bg-amber-500 block mx-auto text-center"
                 >
-                    신청하기
+                    입양 신청하기
                 </Link>
             )}
+
+            {/* 공고 목록으로 돌아가기 버튼 추가 */}
+            <Link
+                href="/announcements"
+                className="mt-6 w-full rounded-full border border-yellow-500 text-yellow-600 py-3 font-semibold text-center block hover:bg-yellow-50 transition"
+            >
+                입양 게시판으로 돌아가기
+            </Link>
         </main>
     );
 }
