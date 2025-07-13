@@ -9,7 +9,7 @@ interface Props {
     reason: string;
     isReadOnly?: boolean;
     setReason?: (value: string) => void;
-    shelterInfo?: { nickname: string; id: number }; // ✅ 보호소 정보 추가
+    shelterInfo?: { nickname: string; id: number };
 }
 
 export default function ApplicationInfoSection({
@@ -31,7 +31,7 @@ export default function ApplicationInfoSection({
                 <div className="space-y-4">
                     <div className="text-gray-600 font-medium">공고 번호</div>
                     <div className="text-gray-600 font-medium">신청 종류</div>
-                    {shelterInfo && <div className="text-gray-600 font-medium">보호소</div>}
+                    <div className="text-gray-600 font-medium">보호소 이름 (id)</div>
                     <div className="text-gray-600 font-medium">신청자 이름</div>
                     <div className="text-gray-600 font-medium">신청자 연락처</div>
                     <div className="text-gray-600 font-medium">신청자 이메일</div>
