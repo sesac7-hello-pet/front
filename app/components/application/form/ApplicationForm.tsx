@@ -24,15 +24,20 @@ import PetExperienceSection from "./section/PetExperienceSection";
 import FuturePlanSection from "./section/FuturePlanSection";
 import RequireRole from "../../RequireRole";
 
+interface AnnouncementDetailResponse {
+    shelterName: string;
+    shelterId: number;
+}
+
 export default function ApplicationForm() {
     const router = useRouter();
     const params = useParams();
-
     const id = Array.isArray(params.id) ? params.id[0] : params.id ?? "0";
     const announcementId = Number(id);
 
     const { user } = useUserStore();
     const [userDetail, setUserDetail] = useState<UserDetailData | null>(null);
+    const [shelterInfo, setShelterInfo] = useState<AnnouncementDetailResponse | null>(null);
 
     const [reason, setReason] = useState("");
     const [housingInfo, setHousingInfo] = useState(initialHousingInfo);
@@ -43,6 +48,7 @@ export default function ApplicationForm() {
     const [futurePlanInfo, setFuturePlanInfo] = useState(initialFuturePlanInfo);
     const [agreement, setAgreement] = useState(initialAgreement);
 
+    // 사용자 정보 조회
     useEffect(() => {
         if (user) {
             api.get<UserDetailData>("/me")
@@ -50,6 +56,16 @@ export default function ApplicationForm() {
                 .catch((err) => console.error("사용자 상세 조회 실패", err));
         }
     }, [user]);
+
+    // 공고 상세 정보 조회 → 보호소 정보 포함
+    useEffect(() => {
+        api.get<AnnouncementDetailResponse>(`/announcements/${announcementId}`)
+            .then((res) => {
+                const { shelterName, shelterId } = res.data;
+                setShelterInfo({ shelterName, shelterId });
+            })
+            .catch((err) => console.error("공고 상세 조회 실패", err));
+    }, [announcementId]);
 
     const handleSubmit = async () => {
         if (!agreement.agreedToAccuracy || !agreement.agreedToCare || !agreement.agreedToPrivacy) {
@@ -89,6 +105,11 @@ export default function ApplicationForm() {
                     name={userDetail?.nickname || user?.nickname || "-"}
                     phoneNumber={userDetail?.phoneNumber || "-"}
                     email={user?.email || "-"}
+                    shelterInfo={
+                        shelterInfo
+                            ? { nickname: shelterInfo.shelterName, id: shelterInfo.shelterId }
+                            : undefined
+                    }
                 />
 
                 <HousingSection housingInfo={housingInfo} setHousingInfo={setHousingInfo} />

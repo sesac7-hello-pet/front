@@ -9,6 +9,7 @@ interface Props {
     reason: string;
     isReadOnly?: boolean;
     setReason?: (value: string) => void;
+    shelterInfo?: { nickname: string; id: number }; // ✅ 보호소 정보 추가
 }
 
 export default function ApplicationInfoSection({
@@ -19,6 +20,7 @@ export default function ApplicationInfoSection({
     reason,
     isReadOnly = false,
     setReason,
+    shelterInfo,
 }: Props) {
     const params = useParams();
     const displayId = id ?? (Array.isArray(params.id) ? params.id[0] : params.id ?? "-");
@@ -29,6 +31,7 @@ export default function ApplicationInfoSection({
                 <div className="space-y-4">
                     <div className="text-gray-600 font-medium">공고 번호</div>
                     <div className="text-gray-600 font-medium">신청 종류</div>
+                    {shelterInfo && <div className="text-gray-600 font-medium">보호소</div>}
                     <div className="text-gray-600 font-medium">신청자 이름</div>
                     <div className="text-gray-600 font-medium">신청자 연락처</div>
                     <div className="text-gray-600 font-medium">신청자 이메일</div>
@@ -37,6 +40,11 @@ export default function ApplicationInfoSection({
                 <div className="space-y-4 ml-10">
                     <div className="text-gray-800">{displayId}</div>
                     <div className="text-gray-800">입양</div>
+                    {shelterInfo && (
+                        <div className="text-gray-800">
+                            {shelterInfo.nickname} ({shelterInfo.id})
+                        </div>
+                    )}
                     <div className="text-gray-800">{name || "-"}</div>
                     <div className="text-gray-800">{formatPhoneNumber(phoneNumber) || "-"}</div>
                     <div className="text-gray-800">{email || "-"}</div>
