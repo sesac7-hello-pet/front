@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "../store/UserStore";
 
@@ -17,12 +17,18 @@ export default function RequireRole({
   fallback = "/403",
   children,
 }: Props) {
-  const user = useUserStore((s) => s.user); // ✔️ user 객체 자체를 가져옴
-  const role = user ? user.role : null; // null = 게스트
+  const user = useUserStore((s) => s.user);
+  const role = user ? user.role : null;
   const router = useRouter();
+  const [isReady, setIsReady] = useState(false);
 
-  /* 1) 스토어가 아직 초기화되지 않았으면 로딩 */
-  const isLoading = user === undefined; // user === undefined ⟹ fetch 전
+  // 클라이언트 사이드에서만 권한 체크 실행
+  useEffect(() => {
+    setIsReady(true);
+  }, []);
+
+  // 스토어가 아직 초기화되지 않았거나 클라이언트 준비가 안된 상태
+  const isLoading = !isReady || user === undefined;
 
   let isBlocked = false;
 
@@ -33,10 +39,12 @@ export default function RequireRole({
   }
 
   useEffect(() => {
-    if (isBlocked) router.replace(fallback);
-  }, [isBlocked]);
+    // 로딩이 완료되고 차단되어야 할 때만 리다이렉트
+    if (!isLoading && isBlocked) {
+      router.replace(fallback);
+    }
+  }, [isLoading, isBlocked, router, fallback]);
 
-  /* 3) 렌더링 */
   if (isLoading) return <div className="p-4">Loading…</div>;
   if (isBlocked) return null;
   return <>{children}</>;

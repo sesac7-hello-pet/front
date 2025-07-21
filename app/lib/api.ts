@@ -11,6 +11,12 @@ const api = axios.create({
   timeout: 5000,
 });
 
+// 별도 axios 인스턴스 사용
+const refreshApi = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_BASE_URL,
+  withCredentials: true,
+});
+
 let isRefreshing = false;
 let queue: {
   resolve: (value: AxiosResponse) => void;
@@ -41,9 +47,9 @@ api.interceptors.response.use(
     const { response, config } = err;
 
     const isAccessExpired =
-      response?.data.code === "UNAUTHORIZED" &&
-      response?.data.message ===
-        "Full authentication is required to access this resource";
+      response?.status === 401 &&
+      (response?.data.code === "UNAUTHORIZED" ||
+        response?.data.code === "ACCESS_TOKEN_EXPIRED");
 
     // 이미 한 번 재시도했다면 그대로 에러 반환
     if (!isAccessExpired || (config as any)._retry) {
@@ -61,10 +67,13 @@ api.interceptors.response.use(
     // ──────────────── 2) 첫 리프레시 시도 ────────────────
     isRefreshing = true;
     try {
-      await api.post("/auth/refresh"); // ← 리프레시 쿠키로 새 accessToken 쿠키 발급
+      await refreshApi.post("/auth/refresh"); // ← 리프레시 쿠키로 새 accessToken 쿠키 발급
+      isRefreshing = false; // ← 먼저 플래그 해제
       processQueue(); // ← 대기열 요청 전부 재시도
       return api(config!); // ← 자기 자신 재시도 후 결과 반환
     } catch (refreshErr) {
+      isRefreshing = false; // ← 먼저 플래그 해제
+
       processQueue(refreshErr); // 전부 실패 처리
       alert("로그인 정보가 없습니다.");
       if (typeof window !== "undefined") {
